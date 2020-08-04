@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:siperian.api" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:mdns="urn:metadata.siperian.api" xmlns:rns="urn:siperian.api" xmlns:tns="urn:types.siperian.api">
+  <xsd:include schemaLocation="MDMWSDL_InlineSchema3.xsd"/>
+  <xsd:import namespace="urn:metadata.siperian.api" schemaLocation="MDMWSDL_InlineSchema2.xsd"/>
+  <xsd:import namespace="urn:types.siperian.api" schemaLocation="MDMWSDL_InlineSchema1.xsd"/>
+
+<!-- BEGIN Global group petaining to all wsdl:message definitions -->
+<!-- END Global group -->
+
+
+<!-- BEGIN Message Definitions for the wsdl:operations  -->
+<!-- END Message Definitions -->
+
+
+</xsd:schema>

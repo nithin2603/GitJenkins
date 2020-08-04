@@ -1,0 +1,22 @@
+
+
+Importing file: C:\WK_Projects\wsdl\Search_WSDL\SearchMDM.wsdl
+
+The WSDL import will proceed with bindings IIB_SearchMDM_soap.
+Creating wsdl schema document for file:///C:/WK_Projects/wsdl/Search_WSDL/SearchMDM.wsdl.
+Parsing wsdl binding {http://www.wkglobal.com/SearchMDM}IIB_SearchMDM_soap.
+Parsing wsdl binding input SearchMDM.
+Parsing wsdl binding output SearchMDM.
+Processing doc style for operation SearchMDM.
+Populating WSDL schema SearchMDM.xsd.
+Creating file SearchMDM.xsd in the workspace.
+Creating file /SearchMDM_APP/SearchMDM_Schema.xsd in the workspace.
+Copying source WSDL SearchMDM.wsdl to SearchMDM.wsdl.
+
+Elapsed time processing this message definition file: 0.163 seconds
+Number of warnings for this message definition file: 0
+
+
+Number of files processed: 1
+
+

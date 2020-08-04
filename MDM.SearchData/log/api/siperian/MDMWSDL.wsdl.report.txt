@@ -1,0 +1,429 @@
+
+
+Importing file: C:\WK_Projects\wsdl\MDMWSDL.wsdl
+
+The WSDL import will proceed with bindings SoapBinding.
+Creating wsdl schema document for file:///C:/WK_Projects/wsdl/MDMWSDL.wsdl.
+Parsing wsdl binding {urn:siperian.api}SoapBinding.
+Parsing wsdl binding input ExecuteBatchBackfill.
+Parsing wsdl binding output ExecuteBatchBackfill.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input ExecuteBatchBackfillAll.
+Parsing wsdl binding output ExecuteBatchBackfillAll.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input acceptUnmatchedRecordsAsUnique.
+Parsing wsdl binding output acceptUnmatchedRecordsAsUnique.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input addRelationship.
+Parsing wsdl binding output addRelationship.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input applyChangeList.
+Parsing wsdl binding output applyChangeList.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input assignUnmergedRecords.
+Parsing wsdl binding output assignUnmergedRecords.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input audit.
+Parsing wsdl binding output audit.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input authenticate.
+Parsing wsdl binding output authenticate.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input canUnmergeRecords.
+Parsing wsdl binding output canUnmergeRecords.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input cleanTable.
+Parsing wsdl binding output cleanTable.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input cleanse.
+Parsing wsdl binding output cleanse.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input cleansePut.
+Parsing wsdl binding output cleansePut.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input clearAssignedUnmergedRecords.
+Parsing wsdl binding output clearAssignedUnmergedRecords.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input createChangeList.
+Parsing wsdl binding output createChangeList.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input createTask.
+Parsing wsdl binding output createTask.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input delete.
+Parsing wsdl binding output delete.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input deleteRelationship.
+Parsing wsdl binding output deleteRelationship.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input describeSiperianObject.
+Parsing wsdl binding output describeSiperianObject.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchAutoMatchAndMerge.
+Parsing wsdl binding output executeBatchAutoMatchAndMerge.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchAutomerge.
+Parsing wsdl binding output executeBatchAutomerge.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchBVTSnapshot.
+Parsing wsdl binding output executeBatchBVTSnapshot.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchCleanStrp.
+Parsing wsdl binding output executeBatchCleanStrp.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchDelete.
+Parsing wsdl binding output executeBatchDelete.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchExternalMatch.
+Parsing wsdl binding output executeBatchExternalMatch.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchExtractBVTVersions.
+Parsing wsdl binding output executeBatchExtractBVTVersions.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchGenerateMatchTokens.
+Parsing wsdl binding output executeBatchGenerateMatchTokens.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchGroup.
+Parsing wsdl binding output executeBatchGroup.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchInitialSmartSearchIndexing.
+Parsing wsdl binding output executeBatchInitialSmartSearchIndexing.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchKeyMatch.
+Parsing wsdl binding output executeBatchKeyMatch.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchLoad.
+Parsing wsdl binding output executeBatchLoad.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchMatch.
+Parsing wsdl binding output executeBatchMatch.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchMatchAnalyze.
+Parsing wsdl binding output executeBatchMatchAnalyze.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchPromote.
+Parsing wsdl binding output executeBatchPromote.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchRecalculateBo.
+Parsing wsdl binding output executeBatchRecalculateBo.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchRecalculateBvt.
+Parsing wsdl binding output executeBatchRecalculateBvt.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchResetMatchTable.
+Parsing wsdl binding output executeBatchResetMatchTable.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchRevalidate.
+Parsing wsdl binding output executeBatchRevalidate.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchStage.
+Parsing wsdl binding output executeBatchStage.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchSynchronize.
+Parsing wsdl binding output executeBatchSynchronize.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchUnmerge.
+Parsing wsdl binding output executeBatchUnmerge.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input executeBatchValidateFKRelationships.
+Parsing wsdl binding output executeBatchValidateFKRelationships.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input flagForAutomerge.
+Parsing wsdl binding output flagForAutomerge.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input generateConstraints.
+Parsing wsdl binding output generateConstraints.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input get.
+Parsing wsdl binding output get.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getAggregatePeriod.
+Parsing wsdl binding output getAggregatePeriod.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getAssignableUsersForTasks.
+Parsing wsdl binding output getAssignableUsersForTasks.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getAssignedRecords.
+Parsing wsdl binding output getAssignedRecords.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getBatchGroupStatus.
+Parsing wsdl binding output getBatchGroupStatus.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getBvt.
+Parsing wsdl binding output getBvt.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getEffectivePeriods.
+Parsing wsdl binding output getEffectivePeriods.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getEntityGraph.
+Parsing wsdl binding output getEntityGraph.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getLookupValue.
+Parsing wsdl binding output getLookupValue.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getLookupValues.
+Parsing wsdl binding output getLookupValues.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getMatchedRecords.
+Parsing wsdl binding output getMatchedRecords.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getMergeHistory.
+Parsing wsdl binding output getMergeHistory.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getOneHop.
+Parsing wsdl binding output getOneHop.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getOrsList.
+Parsing wsdl binding output getOrsList.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getOrsMetadata.
+Parsing wsdl binding output getOrsMetadata.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getResourcePrivileges.
+Parsing wsdl binding output getResourcePrivileges.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getSearchResults.
+Parsing wsdl binding output getSearchResults.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getSiperianObjectCompatibility.
+Parsing wsdl binding output getSiperianObjectCompatibility.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getSystemTrustSettings.
+Parsing wsdl binding output getSystemTrustSettings.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getTaskLineage.
+Parsing wsdl binding output getTaskLineage.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getTasks.
+Parsing wsdl binding output getTasks.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getTrustGraphData.
+Parsing wsdl binding output getTrustGraphData.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getTrustScore.
+Parsing wsdl binding output getTrustScore.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getUnmergedRecordCount.
+Parsing wsdl binding output getUnmergedRecordCount.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getValidationStatus.
+Parsing wsdl binding output getValidationStatus.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input getXrefForEffectiveDate.
+Parsing wsdl binding output getXrefForEffectiveDate.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input link.
+Parsing wsdl binding output link.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input link2.
+Parsing wsdl binding output link2.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input listSiperianObjects.
+Parsing wsdl binding output listSiperianObjects.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input merge.
+Parsing wsdl binding output merge.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input multiMerge.
+Parsing wsdl binding output multiMerge.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input previewBvt.
+Parsing wsdl binding output previewBvt.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input promotePendingXrefs.
+Parsing wsdl binding output promotePendingXrefs.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input put.
+Parsing wsdl binding output put.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input reassignRecords.
+Parsing wsdl binding output reassignRecords.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input registerCustomIndex.
+Parsing wsdl binding output registerCustomIndex.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input registerCustomTableObject.
+Parsing wsdl binding output registerCustomTableObject.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input registerUsers.
+Parsing wsdl binding output registerUsers.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input removeMatchedRecords.
+Parsing wsdl binding output removeMatchedRecords.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input resetBatchGroup.
+Parsing wsdl binding output resetBatchGroup.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input restore.
+Parsing wsdl binding output restore.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input searchHmQuery.
+Parsing wsdl binding output searchHmQuery.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input searchLookupValues.
+Parsing wsdl binding output searchLookupValues.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input searchMatch.
+Parsing wsdl binding output searchMatch.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input searchQuery.
+Parsing wsdl binding output searchQuery.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input setPassword.
+Parsing wsdl binding output setPassword.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input setRecordState.
+Parsing wsdl binding output setRecordState.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input syncCustomResources.
+Parsing wsdl binding output syncCustomResources.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input tokenize.
+Parsing wsdl binding output tokenize.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input unlink.
+Parsing wsdl binding output unlink.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input unlink2.
+Parsing wsdl binding output unlink2.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input unmerge.
+Parsing wsdl binding output unmerge.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input unregisterUsers.
+Parsing wsdl binding output unregisterUsers.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input updateMatchRecord.
+Parsing wsdl binding output updateMatchRecord.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input updateRelationship.
+Parsing wsdl binding output updateRelationship.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input updateTask.
+Parsing wsdl binding output updateTask.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input validateChangeList.
+Parsing wsdl binding output validateChangeList.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input validateMetadata.
+Parsing wsdl binding output validateMetadata.
+Parsing wsdl binding fault siperianRequestFault.
+Parsing wsdl binding input validateTasks.
+Parsing wsdl binding output validateTasks.
+Parsing wsdl binding fault siperianRequestFault.
+Processing doc style for operation ExecuteBatchBackfill.
+Processing doc style for operation ExecuteBatchBackfillAll.
+Processing doc style for operation acceptUnmatchedRecordsAsUnique.
+Processing doc style for operation addRelationship.
+Processing doc style for operation applyChangeList.
+Processing doc style for operation assignUnmergedRecords.
+Processing doc style for operation audit.
+Processing doc style for operation authenticate.
+Processing doc style for operation canUnmergeRecords.
+Processing doc style for operation cleanTable.
+Processing doc style for operation cleanse.
+Processing doc style for operation cleansePut.
+Processing doc style for operation clearAssignedUnmergedRecords.
+Processing doc style for operation createChangeList.
+Processing doc style for operation createTask.
+Processing doc style for operation delete.
+Processing doc style for operation deleteRelationship.
+Processing doc style for operation describeSiperianObject.
+Processing doc style for operation executeBatchAutoMatchAndMerge.
+Processing doc style for operation executeBatchAutomerge.
+Processing doc style for operation executeBatchBVTSnapshot.
+Processing doc style for operation executeBatchCleanStrp.
+Processing doc style for operation executeBatchDelete.
+Processing doc style for operation executeBatchExternalMatch.
+Processing doc style for operation executeBatchExtractBVTVersions.
+Processing doc style for operation executeBatchGenerateMatchTokens.
+Processing doc style for operation executeBatchGroup.
+Processing doc style for operation executeBatchInitialSmartSearchIndexing.
+Processing doc style for operation executeBatchKeyMatch.
+Processing doc style for operation executeBatchLoad.
+Processing doc style for operation executeBatchMatch.
+Processing doc style for operation executeBatchMatchAnalyze.
+Processing doc style for operation executeBatchPromote.
+Processing doc style for operation executeBatchRecalculateBo.
+Processing doc style for operation executeBatchRecalculateBvt.
+Processing doc style for operation executeBatchResetMatchTable.
+Processing doc style for operation executeBatchRevalidate.
+Processing doc style for operation executeBatchStage.
+Processing doc style for operation executeBatchSynchronize.
+Processing doc style for operation executeBatchUnmerge.
+Processing doc style for operation executeBatchValidateFKRelationships.
+Processing doc style for operation flagForAutomerge.
+Processing doc style for operation generateConstraints.
+Processing doc style for operation get.
+Processing doc style for operation getAggregatePeriod.
+Processing doc style for operation getAssignableUsersForTasks.
+Processing doc style for operation getAssignedRecords.
+Processing doc style for operation getBatchGroupStatus.
+Processing doc style for operation getBvt.
+Processing doc style for operation getEffectivePeriods.
+Processing doc style for operation getEntityGraph.
+Processing doc style for operation getLookupValue.
+Processing doc style for operation getLookupValues.
+Processing doc style for operation getMatchedRecords.
+Processing doc style for operation getMergeHistory.
+Processing doc style for operation getOneHop.
+Processing doc style for operation getOrsList.
+Processing doc style for operation getOrsMetadata.
+Processing doc style for operation getResourcePrivileges.
+Processing doc style for operation getSearchResults.
+Processing doc style for operation getSiperianObjectCompatibility.
+Processing doc style for operation getSystemTrustSettings.
+Processing doc style for operation getTaskLineage.
+Processing doc style for operation getTasks.
+Processing doc style for operation getTrustGraphData.
+Processing doc style for operation getTrustScore.
+Processing doc style for operation getUnmergedRecordCount.
+Processing doc style for operation getValidationStatus.
+Processing doc style for operation getXrefForEffectiveDate.
+Processing doc style for operation link.
+Processing doc style for operation link2.
+Processing doc style for operation listSiperianObjects.
+Processing doc style for operation merge.
+Processing doc style for operation multiMerge.
+Processing doc style for operation previewBvt.
+Processing doc style for operation promotePendingXrefs.
+Processing doc style for operation put.
+Processing doc style for operation reassignRecords.
+Processing doc style for operation registerCustomIndex.
+Processing doc style for operation registerCustomTableObject.
+Processing doc style for operation registerUsers.
+Processing doc style for operation removeMatchedRecords.
+Processing doc style for operation resetBatchGroup.
+Processing doc style for operation restore.
+Processing doc style for operation searchHmQuery.
+Processing doc style for operation searchLookupValues.
+Processing doc style for operation searchMatch.
+Processing doc style for operation searchQuery.
+Processing doc style for operation setPassword.
+Processing doc style for operation setRecordState.
+Processing doc style for operation syncCustomResources.
+Processing doc style for operation tokenize.
+Processing doc style for operation unlink.
+Processing doc style for operation unlink2.
+Processing doc style for operation unmerge.
+Processing doc style for operation unregisterUsers.
+Processing doc style for operation updateMatchRecord.
+Processing doc style for operation updateRelationship.
+Processing doc style for operation updateTask.
+Processing doc style for operation validateChangeList.
+Processing doc style for operation validateMetadata.
+Processing doc style for operation validateTasks.
+Populating WSDL schema MDMWSDL.xsd.
+Creating file MDMWSDL.xsd in the workspace.
+Creating file /MDM.SearchData/MDMWSDL_InlineSchema1.xsd in the workspace.
+Creating file /MDM.SearchData/MDMWSDL_InlineSchema2.xsd in the workspace.
+Creating file MDMWSDL_InlineSchema3.xsd in the workspace.
+Copying source WSDL MDMWSDL.wsdl to MDMWSDL.wsdl.
+
+Elapsed time processing this message definition file: 19.648 seconds
+Number of warnings for this message definition file: 0
+
+
+Number of files processed: 1
+
+

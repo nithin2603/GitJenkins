@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+    project:   Informatica MDM
+    copyright: Informatica LLC. (c) 2003-2013.  All rights reserved.
+
+		--><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:types.siperian.api" xmlns="urn:types.siperian.api" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:mdns="urn:metadata.siperian.api" xmlns:ns="urn:siperian.api" xmlns:rns="urn:siperian.api" xmlns:tns="urn:types.siperian.api" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<xsd:simpleType name="OrsId">
+        <xsd:annotation>
+        	<xsd:documentation>This is an identifier for an ORS. The form is: [hostname]-[serverName]-[orsName]</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="InteractionId">
+        <xsd:annotation>
+        	<xsd:documentation>
+        		This is used to identify a group of API requests that are part of a single interaction in AM.
+        		Alternatively, this can be used to protect pending records from update by other processes.  If used in this way, then
+        		only requests that pass in the same interactionId can update the protected pending record.
+        	</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="Rowid">
+        <xsd:annotation>
+        	<xsd:documentation>This is a rowid_object value for a Siperian base object.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="SourceKey">
+        <xsd:annotation>
+        	<xsd:documentation>This is a source system primary key (pkey_src_object).</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="SystemName">
+        <xsd:annotation>
+        	<xsd:documentation>This is the name of a system as defined in an ORS.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="SiperianObjectUid">
+        <xsd:annotation>
+        	<xsd:documentation>A unique identifier for an object (package, mapping, ...) defined in an ORS.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="CleanseFunctionName">
+	     <xsd:annotation>
+	         <xsd:documentation>This is the name of libarary and function. the form is: [libraryname]|[functionname]</xsd:documentation>
+	     </xsd:annotation>
+	     <xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="DependentSourceKey">
+	     <xsd:annotation>
+	         <xsd:documentation>This is the dependent object primary key</xsd:documentation>
+	     </xsd:annotation>
+	     <xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+</xsd:schema>

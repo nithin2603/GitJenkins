@@ -1,0 +1,214 @@
+
+
+CREATE COMPUTE MODULE Handle_Exception
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+			SET Environment.ParserexceptionFlag ='N';
+		CALL GetErrorContext();
+		SET OutputLocalEnvironment = InputLocalEnvironment;
+	--	CREATE FIELD OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages ;
+	--	DECLARE errorMessages REFERENCE TO OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages;
+		DECLARE SearchMDMResponse REFERENCE TO OutputRoot;
+		DECLARE UUIDMetaDataRequest REFERENCE TO OutputRoot;
+		DECLARE UUIDMetaDataResponse REFERENCE TO OutputRoot;
+		DECLARE ErrorMessages REFERENCE TO OutputRoot;
+		DECLARE Status REFERENCE TO OutputRoot;
+		
+		--
+		CREATE FIELD OutputRoot.SOAP.Body.mdm:searchMDMResponse AS SearchMDMResponse;
+		CREATE LASTCHILD OF SearchMDMResponse AS UUIDMetaDataRequest NAME 'uUIDMetaDataRequest';
+		CREATE LASTCHILD OF SearchMDMResponse AS UUIDMetaDataResponse NAME 'uUIDMetaDataResponse';
+		CREATE LASTCHILD OF SearchMDMResponse AS ErrorMessages NAME 'errorMessages';
+		CREATE LASTCHILD OF SearchMDMResponse AS Status NAME 'status' VALUE 'Failure';
+		
+		--
+		
+		SET UUIDMetaDataRequest = Environment.UUIDMetaDataRequest;
+			SET UUIDMetaDataResponse.authenticationSuccessfulFlag='Y';
+			SET UUIDMetaDataResponse.eSBHostName= Environment.Variables.FileData.XMLNSC.Settings.Hostname;
+			SET UUIDMetaDataResponse.eSBNodeName= BrokerName;
+			SET UUIDMetaDataResponse.providerSystemName='IIB';
+			SET UUIDMetaDataResponse.responseDateTime=CURRENT_TIMESTAMP;
+			SET UUIDMetaDataResponse.uUID=Environment.UUID;		
+			
+
+		IF (CONTAINS(Environment.ErrorDes, 'ParserException')) THEN
+			SET ErrorMessages.errorMessage[1].errorMessageCode='400';
+			SET ErrorMessages.errorMessage[1].customErrorMessageCode='400';
+			SET ErrorMessages.errorMessage[1].errorMessageDescription='Insufficient Mandatory Data provided to Service/Schema validation error';
+			SET ErrorMessages.errorMessage[1].errorMessageId='400';
+		ELSE
+			SET ErrorMessages.errorMessage[1].errorMessageCode='500';
+			SET ErrorMessages.errorMessage[1].customErrorMessageCode=Environment.ErrCde;
+			SET ErrorMessages.errorMessage[1].errorMessageDescription='Technical error in The Service';	
+			SET ErrorMessages.errorMessage[1].customErrorMessageLongDescription=Environment.ErrDescription;
+			SET ErrorMessages.errorMessage[1].errorMessageId='500';
+		END IF;
+			SET ErrorMessages.errorMessage[1].customErrorMessageDescription=Environment.ErrDescription;
+			
+			
+			
+			
+	
+ 	PROPAGATE TO TERMINAL 'out' DELETE NONE;
+ 
+ 	PROPAGATE TO TERMINAL 'out1';
+ 
+		RETURN FALSE;
+		
+
+	END;
+
+	CREATE PROCEDURE GetErrorContext()
+	BEGIN
+-- The character variable used to hold the Exception Type name
+		DECLARE cExceptionType CHARACTER;
+		-- The character variable used to hold the Error Description
+		DECLARE cErrorDescription CHARACTER;
+		-- The character variable used to hold the Error Code which is getting from the Catalog field in the Exception list tree
+		DECLARE cErrorCode CHARACTER;
+		-- The reference variable which is referring to Exception list tree
+		DECLARE rInputTree REFERENCE TO InputExceptionList;
+		-- The reference variable which is every time referring to the first child of Exception list tree
+		DECLARE rPtrException REFERENCE TO rInputTree.*[1];
+		-- Loop for getting the exception type: The last child of exception list tree gives you the type of that exception
+		WHILE LASTMOVE(rPtrException) DO
+			IF rPtrException.Number IS NOT NULL THEN
+				SET cExceptionType=FIELDNAME(rPtrException);
+			END IF;
+			MOVE rPtrException LASTCHILD;
+		END WHILE;
+
+
+		IF cExceptionType ='DatabaseException'OR cExceptionType = 'UserException' THEN
+
+			DECLARE databasePointer CHARACTER;
+			DECLARE rPtrException REFERENCE TO rInputTree.*[1];
+			WHILE LASTMOVE(rPtrException) DO
+
+				SET databasePointer =FIELDNAME(rPtrException);
+				IF databasePointer = 'DatabaseException' THEN
+					SET cErrorCode = rPtrException.DatabaseException[1].Number;
+					IF rPtrException.DatabaseException[1].Insert[<].Text IS NOT NULL AND rPtrException.DatabaseException[1].Insert[<].Text <> '0' THEN
+						SET cErrorDescription = 'Code-'||cErrorCode||' Description-'||rPtrException.DatabaseException[1].Insert[<].Text;
+					END IF;
+					SET Environment.ErrorCde=LEFT(cErrorCode,4);
+					SET Environment.ErrorDes=LEFT((cExceptionType||':'||cErrorDescription),150);
+					MOVE rPtrException LASTCHILD;
+				ELSEIF rPtrException.Number is NOT NULL THEN
+					SET cErrorCode = rPtrException.Number;
+					IF rPtrException.Insert[<].Text IS NOT NULL AND rPtrException.Insert[<].Text <> '0' THEN
+						SET cErrorDescription = 'Code-'||cErrorCode||' Description-'||rPtrException.Insert[<].Text;
+					ELSE
+						SET cErrorDescription = 'Code-'||cErrorCode||' Description-'||rPtrException.Text;
+					END IF;
+					SET Environment.ErrorCde=LEFT(cErrorCode,4);
+					SET Environment.ErrorDes=LEFT((cExceptionType||':'||cErrorDescription),100);
+				END IF;
+				MOVE rPtrException LASTCHILD;
+			END WHILE;
+			-- For all types of MQ related message exceptions the third insert field of last child of Exception list tree wiil be given the MQRC code( Error code ) for that perticular error
+		ELSEIF cExceptionType='MessageException'THEN
+
+			DECLARE rPtrException REFERENCE TO rInputTree.*[1];
+			WHILE LASTMOVE(rPtrException) DO
+				IF rPtrException.Number is NOT NULL THEN
+					--For Message exceptions related to MQ, the third insert field of last child of Exception list tree wiil be given the MQRC code for that perticular error
+					IF rPtrException.Insert[3].Text IS NOT NULL AND rPtrException.Insert[3].Text <> '0' THEN
+						SET cErrorCode=rPtrException.Insert[3].Text;
+					ELSE
+						SET cErrorCode=rPtrException.Number;
+					END IF;
+					SET cErrorDescription = 'Code-'||cErrorCode||' Description-'||rPtrException.Text;
+					SET Environment.ErrorCde=LEFT(cErrorCode,4);
+					SET Environment.ErrorDes=LEFT((cExceptionType||':'||cErrorDescription),100);
+				END IF;
+				MOVE rPtrException LASTCHILD;
+			END WHILE;
+			-- For all types of ConversionException,SecurityException,ParserException and CastExceptions the Exception list tree would be the same
+		ELSEIF cExceptionType='ConversionException'OR cExceptionType='SecurityException'OR cExceptionType='CastException' OR cExceptionType='ParserException' OR cExceptionType='SocketException' OR cExceptionType='SocketTimeoutException' THEN
+			
+			
+			IF cExceptionType='ParserException' THEN
+				
+				SET Environment.ParserexceptionFlag = 'Y';
+			END IF;	
+			
+			DECLARE rPtrException REFERENCE TO rInputTree.*[1];
+			DECLARE cErrorTxt CHARACTER;
+			DECLARE cErrorContent CHARACTER;
+            DECLARE fErrorContent CHARACTER '';
+			WHILE LASTMOVE(rPtrException) DO
+				IF rPtrException.Number is NOT NULL THEN
+					SET cErrorCode=rPtrException.Number;
+					SET cErrorDescription = rPtrException.Text;
+					--For getting the insert field of last child having the root cause of the error
+					--concanating Text of all Insert fields
+					FOR cInsert AS rPtrException.Insert[] DO
+						SET cErrorTxt=COALESCE(cErrorTxt,'')||'-'||COALESCE(cInsert.Text,'');
+					END FOR;
+					
+					--For some Recovarable exceptions the insert field is not available
+					
+						SET cErrorContent=cExceptionType||' : '||cErrorDescription||' : '||COALESCE(cErrorTxt,'');
+					
+					SET cErrorDescription = 'Code-'||cErrorCode||' Description-'||cErrorContent;
+					SET fErrorContent=fErrorContent||cErrorDescription;
+					SET Environment.ErrorCde=LEFT(cErrorCode,4);
+					
+				END IF;
+				MOVE rPtrException LASTCHILD;
+			END WHILE;
+			SET Environment.ErrorDes=fErrorContent;
+		
+		ELSE
+
+			DECLARE rPtrException REFERENCE TO rInputTree.*[1];
+			DECLARE cErrorTxt CHARACTER;
+			DECLARE cErrorContent CHARACTER;
+            DECLARE fErrorContent CHARACTER '';
+			WHILE LASTMOVE(rPtrException) DO
+				IF rPtrException.Number is NOT NULL THEN
+					SET cErrorCode=rPtrException.Number;
+					SET cErrorDescription = rPtrException.Text;
+					--For getting the insert field of last child having the root cause of the error
+					--concanating Text of all Insert fields
+					FOR cInsert AS rPtrException.Insert[] DO
+						SET cErrorTxt=COALESCE(cErrorTxt,'')||'-'||COALESCE(cInsert.Text,'');
+					END FOR;
+					
+					--For some Recovarable exceptions the insert field is not available
+					
+						SET cErrorContent=cExceptionType||' : '||cErrorDescription||' : '||COALESCE(cErrorTxt,'');
+					
+					SET cErrorDescription = 'Code-'||cErrorCode||' Description-'||cErrorContent;
+					SET fErrorContent=fErrorContent||cErrorDescription;
+					SET Environment.ErrorCde=LEFT(cErrorCode,4);
+					
+				END IF;
+				MOVE rPtrException LASTCHILD;
+			END WHILE;
+			SET Environment.ErrorDes=fErrorContent;
+		END IF;
+			SET Environment.rPtrException = rPtrException;
+			SET Environment.ErrDescription = cErrorDescription;
+			SET Environment.ErrCode = cErrorCode;
+
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

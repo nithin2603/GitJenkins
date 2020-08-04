@@ -1,0 +1,583 @@
+/*
+  Version         Author           Date             Description
+ ---------     ------------    ------------     ---------------------
+   1.0.0          Bhavya        09/04/2018       Initial release
+*/
+
+
+CREATE COMPUTE MODULE SearchMDM_MF_Response_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN	
+		DECLARE i,k INTEGER 1;
+		
+		
+		DECLARE count INTEGER 0;
+		
+		IF Environment.Variables.FileData.XMLNSC.Settings.LoggingFlag = 'Y' THEN
+			CALL CopyEntireMessage();
+			SET OutputLocalEnvironment.Destination.File.Name='Response-'||COALESCE(Environment.UUID,'')||'-'||CAST(CURRENT_TIMESTAMP AS CHARACTER FORMAT 'yyyyMMddHHmmssSSSSSS')||'.xml';
+			SET OutputLocalEnvironment.Destination.File.Directory=Environment.Variables.FileData.XMLNSC.Settings.ResponseLog;
+			PROPAGATE TO TERMINAL 'out1';
+		END IF;
+		
+		DECLARE searchMDMResponse,searchMDMResponseData,errorMessages  REFERENCE TO OutputRoot;
+		CREATE FIELD OutputRoot.SOAP.Body.mdm:searchMDMResponse AS searchMDMResponse;
+		
+		SET searchMDMResponse.uUIDMetaDataRequest = Environment.UUIDMetaDataRequest;
+		SET searchMDMResponse.uUIDMetaDataResponse.uUID=Environment.UUID;
+		SET searchMDMResponse.uUIDMetaDataResponse.providerSystemName='IIB';		
+		SET	searchMDMResponse.uUIDMetaDataResponse.responseDateTime=CURRENT_TIMESTAMP;
+		SET searchMDMResponse.uUIDMetaDataResponse.authenticationSuccessfulFlag='Y';
+		SET searchMDMResponse.uUIDMetaDataResponse.eSBHostName= Environment.Hostname;
+		SET searchMDMResponse.uUIDMetaDataResponse.eSBNodeName=BrokerName;
+			
+		--Conditional check for SearchMatch/Query.
+		IF EXISTS(InputRoot.SOAP.Body.sip:searchMatchReturn[]) THEN 
+			SET count = CARDINALITY(InputRoot.SOAP.Body.sip:searchMatchReturn.sip:record[]);
+						
+					SET searchMDMResponse.status = 'Success';
+					SET Environment.Recordscount = count;
+					SET Environment.searchRecord = InputRoot.SOAP.Body.sip:searchMatchReturn;	 
+		--check for searchQueryResponse                                
+		ELSEIF EXISTS(InputRoot.SOAP.Body.sip:searchQueryReturn[]) THEN
+			SET count = CARDINALITY(InputRoot.SOAP.Body.sip:searchQueryReturn.sip:record[]);					
+					SET searchMDMResponse.status = 'Success';
+					SET Environment.Recordscount = count;
+					SET Environment.searchRecord = InputRoot.SOAP.Body.sip:searchQueryReturn;
+		END IF;
+						
+		--Conditional check for Customer/Contact.
+		IF Environment.Variables.SearchType = 'CUSTOMER' AND EXISTS(Environment.searchRecord[]) THEN 
+			DECLARE inRef REFERENCE TO Environment.searchRecord;
+			CREATE LASTCHILD OF searchMDMResponse AS searchMDMResponseData NAME 'searchMDMResponseData';
+			CALL CustomerResponse(inRef, searchMDMResponseData);	
+				IF Environment.Variables.returnTotal = TRUE THEN		
+				SET searchMDMResponseData.countOfRecordsReturned = Environment.Recordscount;
+				END IF;
+			SET searchMDMResponseData.matchToken = inRef.sip:searchToken;
+			
+		ELSEIF Environment.Variables.SearchType = 'CONTACT' AND EXISTS(Environment.searchRecord[]) THEN
+			DECLARE inRef REFERENCE TO Environment.searchRecord;
+			CREATE LASTCHILD OF searchMDMResponse AS searchMDMResponseData NAME 'searchMDMResponseData';	
+			CALL ContactResponse(inRef, searchMDMResponseData);	
+				IF Environment.Variables.returnTotal = TRUE THEN	
+				SET searchMDMResponseData.countOfRecordsReturned =  Environment.Recordscount;
+				END IF;
+			SET searchMDMResponseData.matchToken = inRef.sip:searchToken;					
+		END IF;	
+		
+	RETURN TRUE	;
+			
+	END;
+		
+		-- Form SearchMDM IIB Response with Customer data.
+			CREATE PROCEDURE CustomerResponse(IN inRef REFERENCE, INOUT searchMDMResponseData REFERENCE) BEGIN
+			DECLARE searchMDMResponseIIBDataList REFERENCE TO OutputRoot;
+			CREATE LASTCHILD OF searchMDMResponseData AS searchMDMResponseIIBDataList NAME 'searchMDMResponseIIBDataList';
+			DECLARE searchMDMList REFERENCE TO searchMDMResponseIIBDataList;
+
+				SET Environment.Variables.recordCount = CARDINALITY(inRef.sip:record[]);
+				DECLARE recordRef REFERENCE TO inRef.sip:record[1];
+				DECLARE dataListCount INTEGER 1;
+				DECLARE iibfield, mdmfield CHAR;
+				DECLARE recordCount INTEGER;
+					WHILE LASTMOVE (recordRef) DO
+						
+				--		FOR fieldRef AS recordRef.sip:field[] DO
+							
+						
+						
+		/*					IF fieldRef.sip:name = 'SFDC_ID' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].sFDCID = COALESCE(fieldRef.sip:stringValue,NULL);
+							END IF;
+							IF fieldRef.sip:name = 'E1_OW_ID' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].e1OWID = COALESCE(fieldRef.sip:bigIntegerValue,'');
+							END IF;	
+							IF fieldRef.sip:name = 'FIRST_NAME'  THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].firstName = COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'LAST_NAME'  THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].lastName = COALESCE(fieldRef.sip:stringValue,'');
+							END IF;		
+							IF fieldRef.sip:name = 'NAME'  THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].fullName = COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'CUSTOMER_STATUS' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].customerStatus = COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'CUSTOMER_TYPE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].customerType = COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MDM_PARTY_TYPE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mDMPartyType= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'SEGMENT_1' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].segment = COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'SUB_SEGMENT' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].subSegment= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;						
+							IF fieldRef.sip:name = 'MAILING_ADDRESS_LINE_1' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.addressLine1= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MAILING_ADDRESS_LINE_2' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.addressLine2= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MAILING_ADDRESS_LINE_3' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.addressLine3= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MAILING_ADDRESS_LINE_4' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.addressLine4= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MAILING_CITY' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.city= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MAILING_COUNTRY' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.country= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MAILING_COUNTY' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.county= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MAILING_STATE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.state= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MAILING_POSTAL_CODE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.zipCode= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;	
+							IF fieldRef.sip:name = 'ALT_ADDTERSS_LINE_1' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData.addressLine1= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;	
+							IF fieldRef.sip:name = 'ALT_ADDTERSS_LINE_2' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData.addressLine2= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;	
+							IF fieldRef.sip:name = 'ALT_ADDTERSS_LINE_3' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData.addressLine3= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;	
+							IF fieldRef.sip:name = 'ALT_ADDTERSS_LINE_4' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData.addressLine4= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;	
+							IF fieldRef.sip:name = 'ALT_CITY' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData.city= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'ALT_COUNTRY' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData.country= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'ALT_STATE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData.state= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'ALT_COUNTY' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData.county= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'ALT_POSTAL_CODE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData.zipCode= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;	
+							IF fieldRef.sip:name = 'ALT_MAILABILITY_SCORE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].alternateMailabilityScore= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;	
+							IF fieldRef.sip:name = 'PARENT_NUMBER' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].parentNumber= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'PARENT_NAME' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].parentName= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'RULE_NUMBER' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mDMAddlResponseInfo.matchRuleNumber= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'RULESET_NAME' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mDMAddlResponseInfo.matchRuleSetName= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'DEFINITE_MATCH_IND' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mDMAddlResponseInfo.definiteMatchIndicator= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MATCH_SCORE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mDMAddlResponseInfo.matchScore= COALESCE(fieldRef.sip:stringValue,'');
+							END IF; **/	
+			FOR configfieldRef AS Environment.Variables.FileData.XMLNSC.Settings.MDM.CustResponse.HeaderFields.Field[] DO												
+	--		DECLARE k INT 1;											
+			SET iibfield = FIELDVALUE(configfieldRef.IIBField); 
+			SET mdmfield = FIELDVALUE(configfieldRef.MDMField); 
+			
+			FOR mdmfieldRef AS recordRef.sip:field[] DO									
+							
+			IF UPPER(mdmfield) = UPPER(mdmfieldRef.sip:name) THEN
+			
+				IF UPPER(FIELDNAME(mdmfieldRef.sip:bigDecimalValue)) = UPPER('bigDecimalValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigDecimalValue);  
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:bigIntegerValue)) = UPPER('bigIntegerValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigIntegerValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:booleanValue)) = UPPER('booleanValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].{iibfield} = FIELDVALUE(mdmfieldRef.sip:booleanValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:dateValue)) = UPPER('dateValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].{iibfield} = FIELDVALUE(mdmfieldRef.sip:dateValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:stringValue)) = UPPER('stringValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].{iibfield} =  FIELDVALUE(mdmfieldRef.sip:stringValue);
+				END IF;				
+			END IF;					
+			--				SET k = k + 1;
+			END FOR;
+		END FOR;
+				
+		FOR configfieldRef AS Environment.Variables.FileData.XMLNSC.Settings.MDM.CustResponse.mailingAddressData.Field[] DO	
+			SET iibfield = FIELDVALUE(configfieldRef.IIBField); 
+			SET mdmfield = FIELDVALUE(configfieldRef.MDMField); 
+		--	DECLARE k int 1;
+			FOR mdmfieldRef AS recordRef.sip:field[] DO									
+							
+			IF UPPER(mdmfield) = UPPER(mdmfieldRef.sip:name) THEN
+			
+				IF UPPER(FIELDNAME(mdmfieldRef.sip:bigDecimalValue)) = UPPER('bigDecimalValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigDecimalValue);  
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:bigIntegerValue)) = UPPER('bigIntegerValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigIntegerValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:booleanValue)) = UPPER('booleanValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:booleanValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:dateValue)) = UPPER('dateValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:dateValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:stringValue)) = UPPER('stringValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.{iibfield} =  FIELDVALUE(mdmfieldRef.sip:stringValue);
+				END IF;				
+			END IF;					
+		--	SET k = k + 1;
+			END FOR;
+		END FOR;
+	DECLARE alternateAddressData REFERENCE TO OutputRoot;
+	CREATE LASTCHILD OF searchMDMList.searchMDMResponseDataList[dataListCount] AS alternateAddressData  NAME 'alternateAddressData';
+--	DECLARE alternateAddressData REFERENCE TO searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData;
+	FOR configfieldRef AS Environment.Variables.FileData.XMLNSC.Settings.MDM.CustResponse.alternateAddressData.Field[] DO	
+			SET iibfield = FIELDVALUE(configfieldRef.IIBField); 
+			SET mdmfield = FIELDVALUE(configfieldRef.MDMField); 
+		--	DECLARE k int 1;
+			FOR mdmfieldRef AS recordRef.sip:field[] DO						
+							
+			IF UPPER(mdmfield) = UPPER(mdmfieldRef.sip:name) THEN
+			
+				IF UPPER(FIELDNAME(mdmfieldRef.sip:bigDecimalValue)) = UPPER('bigDecimalValue') THEN
+				SET alternateAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigDecimalValue);  
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:bigIntegerValue)) = UPPER('bigIntegerValue') THEN
+				SET alternateAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigIntegerValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:booleanValue)) = UPPER('booleanValue') THEN
+				SET alternateAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:booleanValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:dateValue)) = UPPER('dateValue') THEN
+				SET alternateAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:dateValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:stringValue)) = UPPER('stringValue') THEN
+				SET alternateAddressData.{iibfield} =  FIELDVALUE(mdmfieldRef.sip:stringValue);
+				END IF;				
+			END IF;					
+		--	SET k = k + 1;
+			END FOR;
+	END FOR;
+	
+	DECLARE mDMAddlResponseInfo REFERENCE TO OutputRoot;
+	CREATE LASTCHILD OF searchMDMList.searchMDMResponseDataList[dataListCount] AS mDMAddlResponseInfo  NAME 'mDMAddlResponseInfo';
+--	DECLARE alternateAddressData REFERENCE TO searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData;
+	FOR configfieldRef AS Environment.Variables.FileData.XMLNSC.Settings.MDM.CustResponse.mDMAddlResponseInfo.Field[] DO	
+			SET iibfield = FIELDVALUE(configfieldRef.IIBField); 
+			SET mdmfield = FIELDVALUE(configfieldRef.MDMField); 
+		--	DECLARE k int 1;
+			FOR mdmfieldRef AS recordRef.sip:field[] DO						
+							
+			IF UPPER(mdmfield) = UPPER(mdmfieldRef.sip:name) THEN
+			
+				IF UPPER(FIELDNAME(mdmfieldRef.sip:bigDecimalValue)) = UPPER('bigDecimalValue') THEN
+				SET mDMAddlResponseInfo.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigDecimalValue);  
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:bigIntegerValue)) = UPPER('bigIntegerValue') THEN
+				SET mDMAddlResponseInfo.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigIntegerValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:booleanValue)) = UPPER('booleanValue') THEN
+				SET mDMAddlResponseInfo.{iibfield} = FIELDVALUE(mdmfieldRef.sip:booleanValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:dateValue)) = UPPER('dateValue') THEN
+				SET mDMAddlResponseInfo.{iibfield} = FIELDVALUE(mdmfieldRef.sip:dateValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:stringValue)) = UPPER('stringValue') THEN
+				SET mDMAddlResponseInfo.{iibfield} =  FIELDVALUE(mdmfieldRef.sip:stringValue);
+				END IF;				
+			END IF;					
+		--	SET k = k + 1;
+			END FOR;
+	END FOR;					
+						
+				MOVE recordRef NEXTSIBLING REPEAT TYPE NAME;
+				SET dataListCount = dataListCount + 1;
+			END WHILE;
+		END;
+					
+		-- Form SearchMDM IIB Response with Contact data.
+			CREATE PROCEDURE ContactResponse(IN inRef REFERENCE, INOUT searchMDMResponseData REFERENCE) BEGIN
+			DECLARE searchMDMResponseIIBDataList REFERENCE TO OutputRoot;
+			CREATE LASTCHILD OF searchMDMResponseData AS searchMDMResponseIIBDataList NAME 'searchMDMResponseIIBDataList';
+			
+			DECLARE searchMDMList REFERENCE TO searchMDMResponseIIBDataList;
+			
+				SET Environment.Variables.recordCount = CARDINALITY(inRef.sip:record[]);
+				DECLARE recordRef REFERENCE TO inRef.sip:record[1];
+				DECLARE dataListCount INTEGER 1;
+				DECLARE iibfield,iibfield1,iibfield2, mdmfield CHAR;
+					WHILE LASTMOVE (recordRef) DO
+					DECLARE datalist INTEGER 1;
+		/**				FOR fieldRef AS recordRef.sip:field[] DO
+						
+							IF fieldRef.sip:name = 'SFDC_ID' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].sFDCID = COALESCE(fieldRef.sip:stringValue,NULL);
+							END IF;
+							IF fieldRef.sip:name = 'E1_OW_ID' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].e1OWID = COALESCE(fieldRef.sip:bigIntegerValue,'');
+							END IF;	
+							IF fieldRef.sip:name = 'FIRST_NAME'  THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].firstName = COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'LAST_NAME'  THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].lastName = COALESCE(fieldRef.sip:stringValue,'');
+							END IF;					
+							IF fieldRef.sip:name = 'FULL_NAME' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].fullName = COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'CONTACT_STATUS' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].contactStatus = COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MDM_PARTY_TYPE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mDMPartyType= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+									
+			-- List of communicationContactDataList				
+							IF fieldRef.sip:name = 'PHONE_NUMBER' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[datalist].communicationDetails= COALESCE(fieldRef.sip:stringValue,'');
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[datalist].communicationType= COALESCE(fieldRef.sip:name,'');
+							SET datalist = datalist + 1;
+							END IF;
+							IF fieldRef.sip:name = 'EMAIL_ADDRESS' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[datalist].communicationDetails= COALESCE(fieldRef.sip:stringValue,'');
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[datalist].communicationType= COALESCE(fieldRef.sip:name,'');
+							SET datalist = datalist + 1;
+							END IF;
+							IF fieldRef.sip:name = 'ADDRESS_LINE_1' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.addressLine1= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'ADDRESS_LINE_2' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.addressLine2= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'ADDRESS_LINE_3' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.addressLine3= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'ADDRESS_LINE_4' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.addressLine4= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'CITY' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.city= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'COUNTRY' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.country= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'COUNTY' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.county= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'STATE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.state= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'POSTAL_CODE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.zipCode= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;	
+							IF fieldRef.sip:name = 'PARENT_NUMBER' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].parentNumber= COALESCE(fieldRef.sip:bigIntegerValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'PARENT_NAME' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].parentName= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'RULE_NUMBER' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mDMAddlResponseInfo.matchRuleNumber= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'RULESET_NAME' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mDMAddlResponseInfo.matchRuleSetName= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'DEFINITE_MATCH_IND' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mDMAddlResponseInfo.definiteMatchIndicator= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;
+							IF fieldRef.sip:name = 'MATCH_SCORE' THEN
+								SET searchMDMList.searchMDMResponseDataList[dataListCount].mDMAddlResponseInfo.matchScore= COALESCE(fieldRef.sip:stringValue,'');
+							END IF;	
+
+					END FOR;	   **/
+					
+					
+					
+					
+			FOR configfieldRef AS Environment.Variables.FileData.XMLNSC.Settings.MDM.ContResponse.HeaderFields.Field[] DO												
+	--		DECLARE k INT 1;											
+			SET iibfield = FIELDVALUE(configfieldRef.IIBField); 
+			SET mdmfield = FIELDVALUE(configfieldRef.MDMField); 
+			
+			FOR mdmfieldRef AS recordRef.sip:field[] DO									
+							
+			IF UPPER(mdmfield) = UPPER(mdmfieldRef.sip:name) THEN
+			
+				IF UPPER(FIELDNAME(mdmfieldRef.sip:bigDecimalValue)) = UPPER('bigDecimalValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigDecimalValue);  
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:bigIntegerValue)) = UPPER('bigIntegerValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigIntegerValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:booleanValue)) = UPPER('booleanValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].{iibfield} = FIELDVALUE(mdmfieldRef.sip:booleanValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:dateValue)) = UPPER('dateValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].{iibfield} = FIELDVALUE(mdmfieldRef.sip:dateValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:stringValue)) = UPPER('stringValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].{iibfield} =  FIELDVALUE(mdmfieldRef.sip:stringValue);
+				END IF;				
+			END IF;					
+			--				SET k = k + 1;
+			END FOR;
+		END FOR;
+		DECLARE k int 1;
+		FOR configfieldRef AS Environment.Variables.FileData.XMLNSC.Settings.MDM.ContResponse.communicationContactDataList.Field[] DO	
+			SET iibfield1 = FIELDVALUE(configfieldRef.IIBField1); 
+			SET iibfield2 = FIELDVALUE(configfieldRef.IIBField2); 
+			SET mdmfield = FIELDVALUE(configfieldRef.MDMField); 
+			
+			
+			FOR mdmfieldRef AS recordRef.sip:field[] DO									
+							
+			IF UPPER(mdmfield) = UPPER(mdmfieldRef.sip:name) THEN
+			
+				IF UPPER(FIELDNAME(mdmfieldRef.sip:bigDecimalValue)) = UPPER('bigDecimalValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[k].{iibfield1} = LCASE(FIELDVALUE(mdmfieldRef.sip:bigDecimalValue));  
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[k].{iibfield2} = FIELDVALUE(mdmfieldRef.sip:name);
+				SET k = k + 1;	
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:bigIntegerValue)) = UPPER('bigIntegerValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[k].{iibfield1} = LCASE(FIELDVALUE(mdmfieldRef.sip:bigIntegerValue));
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[k].{iibfield2} = FIELDVALUE(mdmfieldRef.sip:name);
+				SET k = k + 1;	
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:booleanValue)) = UPPER('booleanValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[k].{iibfield1} = LCASE(FIELDVALUE(mdmfieldRef.sip:booleanValue));
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[k].{iibfield2} = FIELDVALUE(mdmfieldRef.sip:name);
+				SET k = k + 1;	
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:dateValue)) = UPPER('dateValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[k].{iibfield1} = LCASE(FIELDVALUE(mdmfieldRef.sip:dateValue));
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[k].{iibfield2} = FIELDVALUE(mdmfieldRef.sip:name);
+				SET k = k + 1;	
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:stringValue)) = UPPER('stringValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[k].{iibfield1} =  LCASE(COALESCE(mdmfieldRef.sip:stringValue,null));
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].communicationContactDataList[k].{iibfield2} = FIELDVALUE(mdmfieldRef.sip:name);			
+				SET k = k + 1;
+				END IF;	
+						
+			END IF;					
+			
+			END FOR;
+		END FOR;
+
+				
+		FOR configfieldRef AS Environment.Variables.FileData.XMLNSC.Settings.MDM.ContResponse.mailingAddressData.Field[] DO	
+			SET iibfield = FIELDVALUE(configfieldRef.IIBField); 
+			SET mdmfield = FIELDVALUE(configfieldRef.MDMField); 
+		--	DECLARE k int 1;
+			FOR mdmfieldRef AS recordRef.sip:field[] DO									
+							
+			IF UPPER(mdmfield) = UPPER(mdmfieldRef.sip:name) THEN
+			
+				IF UPPER(FIELDNAME(mdmfieldRef.sip:bigDecimalValue)) = UPPER('bigDecimalValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigDecimalValue);  
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:bigIntegerValue)) = UPPER('bigIntegerValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigIntegerValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:booleanValue)) = UPPER('booleanValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:booleanValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:dateValue)) = UPPER('dateValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:dateValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:stringValue)) = UPPER('stringValue') THEN
+				SET searchMDMList.searchMDMResponseDataList[dataListCount].mailingAddressData.{iibfield} =  FIELDVALUE(mdmfieldRef.sip:stringValue);
+				END IF;				
+			END IF;					
+		--	SET k = k + 1;
+			END FOR;
+		END FOR;
+	DECLARE alternateAddressData REFERENCE TO OutputRoot;
+	CREATE LASTCHILD OF searchMDMList.searchMDMResponseDataList[dataListCount] AS alternateAddressData  NAME 'alternateAddressData';
+--	DECLARE alternateAddressData REFERENCE TO searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData;
+	FOR configfieldRef AS Environment.Variables.FileData.XMLNSC.Settings.MDM.ContResponse.alternateAddressData.Field[] DO	
+			SET iibfield = FIELDVALUE(configfieldRef.IIBField); 
+			SET mdmfield = FIELDVALUE(configfieldRef.MDMField); 
+		--	DECLARE k int 1;
+			FOR mdmfieldRef AS recordRef.sip:field[] DO						
+							
+			IF UPPER(mdmfield) = UPPER(mdmfieldRef.sip:name) THEN
+			
+				IF UPPER(FIELDNAME(mdmfieldRef.sip:bigDecimalValue)) = UPPER('bigDecimalValue') THEN
+				SET alternateAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigDecimalValue);  
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:bigIntegerValue)) = UPPER('bigIntegerValue') THEN
+				SET alternateAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigIntegerValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:booleanValue)) = UPPER('booleanValue') THEN
+				SET alternateAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:booleanValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:dateValue)) = UPPER('dateValue') THEN
+				SET alternateAddressData.{iibfield} = FIELDVALUE(mdmfieldRef.sip:dateValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:stringValue)) = UPPER('stringValue') THEN
+				SET alternateAddressData.{iibfield} =  FIELDVALUE(mdmfieldRef.sip:stringValue);
+				END IF;				
+			END IF;					
+		--	SET k = k + 1;
+			END FOR;
+	END FOR;
+	
+	DECLARE mDMAddlResponseInfo REFERENCE TO OutputRoot;
+	CREATE LASTCHILD OF searchMDMList.searchMDMResponseDataList[dataListCount] AS mDMAddlResponseInfo  NAME 'mDMAddlResponseInfo';
+--	DECLARE alternateAddressData REFERENCE TO searchMDMList.searchMDMResponseDataList[dataListCount].alternateAddressData;
+	FOR configfieldRef AS Environment.Variables.FileData.XMLNSC.Settings.MDM.ContResponse.mDMAddlResponseInfo.Field[] DO	
+			SET iibfield = FIELDVALUE(configfieldRef.IIBField); 
+			SET mdmfield = FIELDVALUE(configfieldRef.MDMField); 
+		--	DECLARE k int 1;
+			FOR mdmfieldRef AS recordRef.sip:field[] DO						
+							
+			IF UPPER(mdmfield) = UPPER(mdmfieldRef.sip:name) THEN
+			
+				IF UPPER(FIELDNAME(mdmfieldRef.sip:bigDecimalValue)) = UPPER('bigDecimalValue') THEN
+				SET mDMAddlResponseInfo.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigDecimalValue);  
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:bigIntegerValue)) = UPPER('bigIntegerValue') THEN
+				SET mDMAddlResponseInfo.{iibfield} = FIELDVALUE(mdmfieldRef.sip:bigIntegerValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:booleanValue)) = UPPER('booleanValue') THEN
+				SET mDMAddlResponseInfo.{iibfield} = FIELDVALUE(mdmfieldRef.sip:booleanValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:dateValue)) = UPPER('dateValue') THEN
+				SET mDMAddlResponseInfo.{iibfield} = FIELDVALUE(mdmfieldRef.sip:dateValue);
+				
+				ELSEIF UPPER(FIELDNAME(mdmfieldRef.sip:stringValue)) = UPPER('stringValue') THEN
+				SET mDMAddlResponseInfo.{iibfield} =  FIELDVALUE(mdmfieldRef.sip:stringValue);
+				END IF;				
+			END IF;					
+		--	SET k = k + 1;
+			END FOR;
+	END FOR;		
+		
+				
+				MOVE recordRef NEXTSIBLING REPEAT TYPE NAME;
+				SET dataListCount = dataListCount + 1;
+			END WHILE;
+			END;
+			
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+
+END MODULE;

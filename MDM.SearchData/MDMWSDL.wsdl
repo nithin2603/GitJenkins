@@ -1,0 +1,2399 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+    project:   Informatica MDM
+    copyright: Informatica LLC. (c) 2003-2013.  All rights reserved.
+
+		--><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:siperian.api" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:mdns="urn:metadata.siperian.api" xmlns:ns="urn:siperian.api" xmlns:rns="urn:siperian.api" xmlns:tns="urn:types.siperian.api" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <documentation>
+    <appinfo source="WMQI_APPINFO">
+      <MRWSDLAppInfo imported="true">
+        <generatedXSD location="MDMWSDL_InlineSchema2.xsd"/>
+        <generatedXSD location="MDMWSDL_InlineSchema3.xsd"/>
+        <generatedXSD location="MDMWSDL_InlineSchema1.xsd"/>
+        <binding hasEncoding="false" imported="true" name="SoapBinding" originalBindingStyle="document"/>
+      </MRWSDLAppInfo>
+    </appinfo>
+  </documentation>
+  <types>
+
+
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:metadata.siperian.api" xmlns="urn:metadata.siperian.api">
+<xsd:import namespace="urn:types.siperian.api" schemaLocation="MDMWSDL_InlineSchema1.xsd"/>
+
+<xsd:include schemaLocation="MDMWSDL_InlineSchema2.xsd"/>
+    </xsd:schema>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:siperian.api" xmlns="urn:siperian.api" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+<xsd:import namespace="urn:types.siperian.api" schemaLocation="MDMWSDL_InlineSchema1.xsd"/>
+<xsd:import namespace="urn:metadata.siperian.api" schemaLocation="MDMWSDL_InlineSchema2.xsd"/>
+
+<!--
+		Discovery APIs
+	--><!--
+		Merge APIs
+	--><xsd:include schemaLocation="MDMWSDL_InlineSchema3.xsd"/>
+    </xsd:schema>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:types.siperian.api" xmlns="urn:types.siperian.api">
+<xsd:include schemaLocation="MDMWSDL_InlineSchema1.xsd"/>
+    </xsd:schema>
+    </types>
+  <message name="siperianRequestFault">
+    <part element="ns:SiperianRequestFault" name="fault"/>
+  </message>
+  <message name="ExecuteBatchBackfillRequest">
+    <part element="ns:ExecuteBatchBackfill" name="ExecuteBatchBackfillRequest"/>
+  </message>
+  <message name="ExecuteBatchBackfillResponse">
+    <part element="ns:ExecuteBatchBackfillReturn" name="ExecuteBatchBackfillReturn"/>
+  </message>
+  <message name="ExecuteBatchBackfillAllRequest">
+    <part element="ns:ExecuteBatchBackfillAll" name="ExecuteBatchBackfillAllRequest"/>
+  </message>
+  <message name="ExecuteBatchBackfillAllResponse">
+    <part element="ns:ExecuteBatchBackfillAllReturn" name="ExecuteBatchBackfillAllReturn"/>
+  </message>
+  <message name="acceptUnmatchedRecordsAsUniqueRequest">
+    <part element="ns:acceptUnmatchedRecordsAsUnique" name="acceptUnmatchedRecordsAsUniqueRequest"/>
+  </message>
+  <message name="acceptUnmatchedRecordsAsUniqueResponse">
+    <part element="ns:acceptUnmatchedRecordsAsUniqueReturn" name="acceptUnmatchedRecordsAsUniqueReturn"/>
+  </message>
+  <message name="addRelationshipRequest">
+    <part element="ns:addRelationship" name="addRelationshipRequest"/>
+  </message>
+  <message name="addRelationshipResponse">
+    <part element="ns:addRelationshipReturn" name="addRelationshipReturn"/>
+  </message>
+  <message name="applyChangeListRequest">
+    <part element="ns:applyChangeList" name="applyChangeListRequest"/>
+  </message>
+  <message name="applyChangeListResponse">
+    <part element="ns:applyChangeListReturn" name="applyChangeListReturn"/>
+  </message>
+  <message name="assignUnmergedRecordsRequest">
+    <part element="ns:assignUnmergedRecords" name="assignUnmergedRecordsRequest"/>
+  </message>
+  <message name="assignUnmergedRecordsResponse">
+    <part element="ns:assignUnmergedRecordsReturn" name="assignUnmergedRecordsReturn"/>
+  </message>
+  <message name="auditRequest">
+    <part element="ns:audit" name="auditRequest"/>
+  </message>
+  <message name="auditResponse">
+    <part element="ns:auditReturn" name="auditReturn"/>
+  </message>
+  <message name="authenticateRequest">
+    <part element="ns:authenticate" name="authenticateRequest"/>
+  </message>
+  <message name="authenticateResponse">
+    <part element="ns:authenticateReturn" name="authenticateReturn"/>
+  </message>
+  <message name="canUnmergeRecordsRequest">
+    <part element="ns:canUnmergeRecords" name="canUnmergeRecordsRequest"/>
+  </message>
+  <message name="canUnmergeRecordsResponse">
+    <part element="ns:canUnmergeRecordsReturn" name="canUnmergeRecordsReturn"/>
+  </message>
+  <message name="cleanTableRequest">
+    <part element="ns:cleanTable" name="cleanTableRequest"/>
+  </message>
+  <message name="cleanTableResponse">
+    <part element="ns:cleanTableReturn" name="cleanTableReturn"/>
+  </message>
+  <message name="cleanseRequest">
+    <part element="ns:cleanse" name="cleanseRequest"/>
+  </message>
+  <message name="cleanseResponse">
+    <part element="ns:cleanseReturn" name="cleanseReturn"/>
+  </message>
+  <message name="cleansePutRequest">
+    <part element="ns:cleansePut" name="cleansePutRequest"/>
+  </message>
+  <message name="cleansePutResponse">
+    <part element="ns:cleansePutReturn" name="cleansePutReturn"/>
+  </message>
+  <message name="clearAssignedUnmergedRecordsRequest">
+    <part element="ns:clearAssignedUnmergedRecords" name="clearAssignedUnmergedRecordsRequest"/>
+  </message>
+  <message name="clearAssignedUnmergedRecordsResponse">
+    <part element="ns:clearAssignedUnmergedRecordsReturn" name="clearAssignedUnmergedRecordsReturn"/>
+  </message>
+  <message name="createChangeListRequest">
+    <part element="ns:createChangeList" name="createChangeListRequest"/>
+  </message>
+  <message name="createChangeListResponse">
+    <part element="ns:createChangeListReturn" name="createChangeListReturn"/>
+  </message>
+  <message name="createTaskRequest">
+    <part element="ns:createTask" name="createTaskRequest"/>
+  </message>
+  <message name="createTaskResponse">
+    <part element="ns:createTaskReturn" name="createTaskReturn"/>
+  </message>
+  <message name="deleteRequest">
+    <part element="ns:delete" name="deleteRequest"/>
+  </message>
+  <message name="deleteResponse">
+    <part element="ns:deleteReturn" name="deleteReturn"/>
+  </message>
+  <message name="deleteRelationshipRequest">
+    <part element="ns:deleteRelationship" name="deleteRelationshipRequest"/>
+  </message>
+  <message name="deleteRelationshipResponse">
+    <part element="ns:deleteRelationshipReturn" name="deleteRelationshipReturn"/>
+  </message>
+  <message name="describeSiperianObjectRequest">
+    <part element="ns:describeSiperianObject" name="describeSiperianObjectRequest"/>
+  </message>
+  <message name="describeSiperianObjectResponse">
+    <part element="ns:describeSiperianObjectReturn" name="describeSiperianObjectReturn"/>
+  </message>
+  <message name="executeBatchAutoMatchAndMergeRequest">
+    <part element="ns:executeBatchAutoMatchAndMerge" name="executeBatchAutoMatchAndMergeRequest"/>
+  </message>
+  <message name="executeBatchAutoMatchAndMergeResponse">
+    <part element="ns:executeBatchAutoMatchAndMergeReturn" name="executeBatchAutoMatchAndMergeReturn"/>
+  </message>
+  <message name="executeBatchAutomergeRequest">
+    <part element="ns:executeBatchAutomerge" name="executeBatchAutomergeRequest"/>
+  </message>
+  <message name="executeBatchAutomergeResponse">
+    <part element="ns:executeBatchAutomergeReturn" name="executeBatchAutomergeReturn"/>
+  </message>
+  <message name="executeBatchBVTSnapshotRequest">
+    <part element="ns:executeBatchBVTSnapshot" name="executeBatchBVTSnapshotRequest"/>
+  </message>
+  <message name="executeBatchBVTSnapshotResponse">
+    <part element="ns:executeBatchBVTSnapshotReturn" name="executeBatchBVTSnapshotReturn"/>
+  </message>
+  <message name="executeBatchCleanStrpRequest">
+    <part element="ns:executeBatchCleanStrp" name="executeBatchCleanStrpRequest"/>
+  </message>
+  <message name="executeBatchCleanStrpResponse">
+    <part element="ns:executeBatchCleanStrpReturn" name="executeBatchCleanStrpReturn"/>
+  </message>
+  <message name="executeBatchDeleteRequest">
+    <part element="ns:executeBatchDelete" name="executeBatchDeleteRequest"/>
+  </message>
+  <message name="executeBatchDeleteResponse">
+    <part element="ns:executeBatchDeleteReturn" name="executeBatchDeleteReturn"/>
+  </message>
+  <message name="executeBatchExternalMatchRequest">
+    <part element="ns:executeBatchExternalMatch" name="executeBatchExternalMatchRequest"/>
+  </message>
+  <message name="executeBatchExternalMatchResponse">
+    <part element="ns:executeBatchExternalMatchReturn" name="executeBatchExternalMatchReturn"/>
+  </message>
+  <message name="executeBatchExtractBVTVersionsRequest">
+    <part element="ns:executeBatchExtractBVTVersions" name="executeBatchExtractBVTVersionsRequest"/>
+  </message>
+  <message name="executeBatchExtractBVTVersionsResponse">
+    <part element="ns:executeBatchExtractBVTVersionsReturn" name="executeBatchExtractBVTVersionsReturn"/>
+  </message>
+  <message name="executeBatchGenerateMatchTokensRequest">
+    <part element="ns:executeBatchGenerateMatchTokens" name="executeBatchGenerateMatchTokensRequest"/>
+  </message>
+  <message name="executeBatchGenerateMatchTokensResponse">
+    <part element="ns:executeBatchGenerateMatchTokensReturn" name="executeBatchGenerateMatchTokensReturn"/>
+  </message>
+  <message name="executeBatchGroupRequest">
+    <part element="ns:executeBatchGroup" name="executeBatchGroupRequest"/>
+  </message>
+  <message name="executeBatchGroupResponse">
+    <part element="ns:executeBatchGroupReturn" name="executeBatchGroupReturn"/>
+  </message>
+  <message name="executeBatchInitialSmartSearchIndexingRequest">
+    <part element="ns:executeBatchInitialSmartSearchIndexing" name="executeBatchInitialSmartSearchIndexingRequest"/>
+  </message>
+  <message name="executeBatchInitialSmartSearchIndexingResponse">
+    <part element="ns:executeBatchInitialSmartSearchIndexingReturn" name="executeBatchInitialSmartSearchIndexingReturn"/>
+  </message>
+  <message name="executeBatchKeyMatchRequest">
+    <part element="ns:executeBatchKeyMatch" name="executeBatchKeyMatchRequest"/>
+  </message>
+  <message name="executeBatchKeyMatchResponse">
+    <part element="ns:executeBatchKeyMatchReturn" name="executeBatchKeyMatchReturn"/>
+  </message>
+  <message name="executeBatchLoadRequest">
+    <part element="ns:executeBatchLoad" name="executeBatchLoadRequest"/>
+  </message>
+  <message name="executeBatchLoadResponse">
+    <part element="ns:executeBatchLoadReturn" name="executeBatchLoadReturn"/>
+  </message>
+  <message name="executeBatchMatchRequest">
+    <part element="ns:executeBatchMatch" name="executeBatchMatchRequest"/>
+  </message>
+  <message name="executeBatchMatchResponse">
+    <part element="ns:executeBatchMatchReturn" name="executeBatchMatchReturn"/>
+  </message>
+  <message name="executeBatchMatchAnalyzeRequest">
+    <part element="ns:executeBatchMatchAnalyze" name="executeBatchMatchAnalyzeRequest"/>
+  </message>
+  <message name="executeBatchMatchAnalyzeResponse">
+    <part element="ns:executeBatchMatchAnalyzeReturn" name="executeBatchMatchAnalyzeReturn"/>
+  </message>
+  <message name="executeBatchPromoteRequest">
+    <part element="ns:executeBatchPromote" name="executeBatchPromoteRequest"/>
+  </message>
+  <message name="executeBatchPromoteResponse">
+    <part element="ns:executeBatchPromoteReturn" name="executeBatchPromoteReturn"/>
+  </message>
+  <message name="executeBatchRecalculateBoRequest">
+    <part element="ns:executeBatchRecalculateBo" name="executeBatchRecalculateBoRequest"/>
+  </message>
+  <message name="executeBatchRecalculateBoResponse">
+    <part element="ns:executeBatchRecalculateBoReturn" name="executeBatchRecalculateBoReturn"/>
+  </message>
+  <message name="executeBatchRecalculateBvtRequest">
+    <part element="ns:executeBatchRecalculateBvt" name="executeBatchRecalculateBvtRequest"/>
+  </message>
+  <message name="executeBatchRecalculateBvtResponse">
+    <part element="ns:executeBatchRecalculateBvtReturn" name="executeBatchRecalculateBvtReturn"/>
+  </message>
+  <message name="executeBatchResetMatchTableRequest">
+    <part element="ns:executeBatchResetMatchTable" name="executeBatchResetMatchTableRequest"/>
+  </message>
+  <message name="executeBatchResetMatchTableResponse">
+    <part element="ns:executeBatchResetMatchTableReturn" name="executeBatchResetMatchTableReturn"/>
+  </message>
+  <message name="executeBatchRevalidateRequest">
+    <part element="ns:executeBatchRevalidate" name="executeBatchRevalidateRequest"/>
+  </message>
+  <message name="executeBatchRevalidateResponse">
+    <part element="ns:executeBatchRevalidateReturn" name="executeBatchRevalidateReturn"/>
+  </message>
+  <message name="executeBatchStageRequest">
+    <part element="ns:executeBatchStage" name="executeBatchStageRequest"/>
+  </message>
+  <message name="executeBatchStageResponse">
+    <part element="ns:executeBatchStageReturn" name="executeBatchStageReturn"/>
+  </message>
+  <message name="executeBatchSynchronizeRequest">
+    <part element="ns:executeBatchSynchronize" name="executeBatchSynchronizeRequest"/>
+  </message>
+  <message name="executeBatchSynchronizeResponse">
+    <part element="ns:executeBatchSynchronizeReturn" name="executeBatchSynchronizeReturn"/>
+  </message>
+  <message name="executeBatchUnmergeRequest">
+    <part element="ns:executeBatchUnmerge" name="executeBatchUnmergeRequest"/>
+  </message>
+  <message name="executeBatchUnmergeResponse">
+    <part element="ns:executeBatchUnmergeReturn" name="executeBatchUnmergeReturn"/>
+  </message>
+  <message name="executeBatchValidateFKRelationshipsRequest">
+    <part element="ns:executeBatchValidateFKRelationships" name="executeBatchValidateFKRelationshipsRequest"/>
+  </message>
+  <message name="executeBatchValidateFKRelationshipsResponse">
+    <part element="ns:executeBatchValidateFKRelationshipsReturn" name="executeBatchValidateFKRelationshipsReturn"/>
+  </message>
+  <message name="flagForAutomergeRequest">
+    <part element="ns:flagForAutomerge" name="flagForAutomergeRequest"/>
+  </message>
+  <message name="flagForAutomergeResponse">
+    <part element="ns:flagForAutomergeReturn" name="flagForAutomergeReturn"/>
+  </message>
+  <message name="generateConstraintsRequest">
+    <part element="ns:generateConstraints" name="generateConstraintsRequest"/>
+  </message>
+  <message name="generateConstraintsResponse">
+    <part element="ns:generateConstraintsReturn" name="generateConstraintsReturn"/>
+  </message>
+  <message name="getRequest">
+    <part element="ns:get" name="getRequest"/>
+  </message>
+  <message name="getResponse">
+    <part element="ns:getReturn" name="getReturn"/>
+  </message>
+  <message name="getAggregatePeriodRequest">
+    <part element="ns:getAggregatePeriod" name="getAggregatePeriodRequest"/>
+  </message>
+  <message name="getAggregatePeriodResponse">
+    <part element="ns:getAggregatePeriodReturn" name="getAggregatePeriodReturn"/>
+  </message>
+  <message name="getAssignableUsersForTasksRequest">
+    <part element="ns:getAssignableUsersForTasks" name="getAssignableUsersForTasksRequest"/>
+  </message>
+  <message name="getAssignableUsersForTasksResponse">
+    <part element="ns:getAssignableUsersForTasksReturn" name="getAssignableUsersForTasksReturn"/>
+  </message>
+  <message name="getAssignedRecordsRequest">
+    <part element="ns:getAssignedRecords" name="getAssignedRecordsRequest"/>
+  </message>
+  <message name="getAssignedRecordsResponse">
+    <part element="ns:getAssignedRecordsReturn" name="getAssignedRecordsReturn"/>
+  </message>
+  <message name="getBatchGroupStatusRequest">
+    <part element="ns:getBatchGroupStatus" name="getBatchGroupStatusRequest"/>
+  </message>
+  <message name="getBatchGroupStatusResponse">
+    <part element="ns:getBatchGroupStatusReturn" name="getBatchGroupStatusReturn"/>
+  </message>
+  <message name="getBvtRequest">
+    <part element="ns:getBvt" name="getBvtRequest"/>
+  </message>
+  <message name="getBvtResponse">
+    <part element="ns:getBvtReturn" name="getBvtReturn"/>
+  </message>
+  <message name="getEffectivePeriodsRequest">
+    <part element="ns:getEffectivePeriods" name="getEffectivePeriodsRequest"/>
+  </message>
+  <message name="getEffectivePeriodsResponse">
+    <part element="ns:getEffectivePeriodsReturn" name="getEffectivePeriodsReturn"/>
+  </message>
+  <message name="getEntityGraphRequest">
+    <part element="ns:getEntityGraph" name="getEntityGraphRequest"/>
+  </message>
+  <message name="getEntityGraphResponse">
+    <part element="ns:getEntityGraphReturn" name="getEntityGraphReturn"/>
+  </message>
+  <message name="getLookupValueRequest">
+    <part element="ns:getLookupValue" name="getLookupValueRequest"/>
+  </message>
+  <message name="getLookupValueResponse">
+    <part element="ns:getLookupValueReturn" name="getLookupValueReturn"/>
+  </message>
+  <message name="getLookupValuesRequest">
+    <part element="ns:getLookupValues" name="getLookupValuesRequest"/>
+  </message>
+  <message name="getLookupValuesResponse">
+    <part element="ns:getLookupValuesReturn" name="getLookupValuesReturn"/>
+  </message>
+  <message name="getMatchedRecordsRequest">
+    <part element="ns:getMatchedRecords" name="getMatchedRecordsRequest"/>
+  </message>
+  <message name="getMatchedRecordsResponse">
+    <part element="ns:getMatchedRecordsReturn" name="getMatchedRecordsReturn"/>
+  </message>
+  <message name="getMergeHistoryRequest">
+    <part element="ns:getMergeHistory" name="getMergeHistoryRequest"/>
+  </message>
+  <message name="getMergeHistoryResponse">
+    <part element="ns:getMergeHistoryReturn" name="getMergeHistoryReturn"/>
+  </message>
+  <message name="getOneHopRequest">
+    <part element="ns:getOneHop" name="getOneHopRequest"/>
+  </message>
+  <message name="getOneHopResponse">
+    <part element="ns:getOneHopReturn" name="getOneHopReturn"/>
+  </message>
+  <message name="getOrsListRequest">
+    <part element="ns:getOrsList" name="getOrsListRequest"/>
+  </message>
+  <message name="getOrsListResponse">
+    <part element="ns:getOrsListReturn" name="getOrsListReturn"/>
+  </message>
+  <message name="getOrsMetadataRequest">
+    <part element="ns:getOrsMetadata" name="getOrsMetadataRequest"/>
+  </message>
+  <message name="getOrsMetadataResponse">
+    <part element="ns:getOrsMetadataReturn" name="getOrsMetadataReturn"/>
+  </message>
+  <message name="getResourcePrivilegesRequest">
+    <part element="ns:getResourcePrivileges" name="getResourcePrivilegesRequest"/>
+  </message>
+  <message name="getResourcePrivilegesResponse">
+    <part element="ns:getResourcePrivilegesReturn" name="getResourcePrivilegesReturn"/>
+  </message>
+  <message name="getSearchResultsRequest">
+    <part element="ns:getSearchResults" name="getSearchResultsRequest"/>
+  </message>
+  <message name="getSearchResultsResponse">
+    <part element="ns:getSearchResultsReturn" name="getSearchResultsReturn"/>
+  </message>
+  <message name="getSiperianObjectCompatibilityRequest">
+    <part element="ns:getSiperianObjectCompatibility" name="getSiperianObjectCompatibilityRequest"/>
+  </message>
+  <message name="getSiperianObjectCompatibilityResponse">
+    <part element="ns:getSiperianObjectCompatibilityReturn" name="getSiperianObjectCompatibilityReturn"/>
+  </message>
+  <message name="getSystemTrustSettingsRequest">
+    <part element="ns:getSystemTrustSettings" name="getSystemTrustSettingsRequest"/>
+  </message>
+  <message name="getSystemTrustSettingsResponse">
+    <part element="ns:getSystemTrustSettingsReturn" name="getSystemTrustSettingsReturn"/>
+  </message>
+  <message name="getTaskLineageRequest">
+    <part element="ns:getTaskLineage" name="getTaskLineageRequest"/>
+  </message>
+  <message name="getTaskLineageResponse">
+    <part element="ns:getTaskLineageReturn" name="getTaskLineageReturn"/>
+  </message>
+  <message name="getTasksRequest">
+    <part element="ns:getTasks" name="getTasksRequest"/>
+  </message>
+  <message name="getTasksResponse">
+    <part element="ns:getTasksReturn" name="getTasksReturn"/>
+  </message>
+  <message name="getTrustGraphDataRequest">
+    <part element="ns:getTrustGraphData" name="getTrustGraphDataRequest"/>
+  </message>
+  <message name="getTrustGraphDataResponse">
+    <part element="ns:getTrustGraphDataReturn" name="getTrustGraphDataReturn"/>
+  </message>
+  <message name="getTrustScoreRequest">
+    <part element="ns:getTrustScore" name="getTrustScoreRequest"/>
+  </message>
+  <message name="getTrustScoreResponse">
+    <part element="ns:getTrustScoreReturn" name="getTrustScoreReturn"/>
+  </message>
+  <message name="getUnmergedRecordCountRequest">
+    <part element="ns:getUnmergedRecordCount" name="getUnmergedRecordCountRequest"/>
+  </message>
+  <message name="getUnmergedRecordCountResponse">
+    <part element="ns:getUnmergedRecordCountReturn" name="getUnmergedRecordCountReturn"/>
+  </message>
+  <message name="getValidationStatusRequest">
+    <part element="ns:getValidationStatus" name="getValidationStatusRequest"/>
+  </message>
+  <message name="getValidationStatusResponse">
+    <part element="ns:getValidationStatusReturn" name="getValidationStatusReturn"/>
+  </message>
+  <message name="getXrefForEffectiveDateRequest">
+    <part element="ns:getXrefForEffectiveDate" name="getXrefForEffectiveDateRequest"/>
+  </message>
+  <message name="getXrefForEffectiveDateResponse">
+    <part element="ns:getXrefForEffectiveDateReturn" name="getXrefForEffectiveDateReturn"/>
+  </message>
+  <message name="linkRequest">
+    <part element="ns:link" name="linkRequest"/>
+  </message>
+  <message name="linkResponse">
+    <part element="ns:linkReturn" name="linkReturn"/>
+  </message>
+  <message name="link2Request">
+    <part element="ns:link2" name="link2Request"/>
+  </message>
+  <message name="link2Response">
+    <part element="ns:link2Return" name="link2Return"/>
+  </message>
+  <message name="listSiperianObjectsRequest">
+    <part element="ns:listSiperianObjects" name="listSiperianObjectsRequest"/>
+  </message>
+  <message name="listSiperianObjectsResponse">
+    <part element="ns:listSiperianObjectsReturn" name="listSiperianObjectsReturn"/>
+  </message>
+  <message name="mergeRequest">
+    <part element="ns:merge" name="mergeRequest"/>
+  </message>
+  <message name="mergeResponse">
+    <part element="ns:mergeReturn" name="mergeReturn"/>
+  </message>
+  <message name="multiMergeRequest">
+    <part element="ns:multiMerge" name="multiMergeRequest"/>
+  </message>
+  <message name="multiMergeResponse">
+    <part element="ns:multiMergeReturn" name="multiMergeReturn"/>
+  </message>
+  <message name="previewBvtRequest">
+    <part element="ns:previewBvt" name="previewBvtRequest"/>
+  </message>
+  <message name="previewBvtResponse">
+    <part element="ns:previewBvtReturn" name="previewBvtReturn"/>
+  </message>
+  <message name="promotePendingXrefsRequest">
+    <part element="ns:promotePendingXrefs" name="promotePendingXrefsRequest"/>
+  </message>
+  <message name="promotePendingXrefsResponse">
+    <part element="ns:promotePendingXrefsReturn" name="promotePendingXrefsReturn"/>
+  </message>
+  <message name="putRequest">
+    <part element="ns:put" name="putRequest"/>
+  </message>
+  <message name="putResponse">
+    <part element="ns:putReturn" name="putReturn"/>
+  </message>
+  <message name="reassignRecordsRequest">
+    <part element="ns:reassignRecords" name="reassignRecordsRequest"/>
+  </message>
+  <message name="reassignRecordsResponse">
+    <part element="ns:reassignRecordsReturn" name="reassignRecordsReturn"/>
+  </message>
+  <message name="registerCustomIndexRequest">
+    <part element="ns:registerCustomIndex" name="registerCustomIndexRequest"/>
+  </message>
+  <message name="registerCustomIndexResponse">
+    <part element="ns:registerCustomIndexReturn" name="registerCustomIndexReturn"/>
+  </message>
+  <message name="registerCustomTableObjectRequest">
+    <part element="ns:registerCustomTableObject" name="registerCustomTableObjectRequest"/>
+  </message>
+  <message name="registerCustomTableObjectResponse">
+    <part element="ns:registerCustomTableObjectReturn" name="registerCustomTableObjectReturn"/>
+  </message>
+  <message name="registerUsersRequest">
+    <part element="ns:registerUsers" name="registerUsersRequest"/>
+  </message>
+  <message name="registerUsersResponse">
+    <part element="ns:registerUsersReturn" name="registerUsersReturn"/>
+  </message>
+  <message name="removeMatchedRecordsRequest">
+    <part element="ns:removeMatchedRecords" name="removeMatchedRecordsRequest"/>
+  </message>
+  <message name="removeMatchedRecordsResponse">
+    <part element="ns:removeMatchedRecordsReturn" name="removeMatchedRecordsReturn"/>
+  </message>
+  <message name="resetBatchGroupRequest">
+    <part element="ns:resetBatchGroup" name="resetBatchGroupRequest"/>
+  </message>
+  <message name="resetBatchGroupResponse">
+    <part element="ns:resetBatchGroupReturn" name="resetBatchGroupReturn"/>
+  </message>
+  <message name="restoreRequest">
+    <part element="ns:restore" name="restoreRequest"/>
+  </message>
+  <message name="restoreResponse">
+    <part element="ns:restoreReturn" name="restoreReturn"/>
+  </message>
+  <message name="searchHmQueryRequest">
+    <part element="ns:searchHmQuery" name="searchHmQueryRequest"/>
+  </message>
+  <message name="searchHmQueryResponse">
+    <part element="ns:searchHmQueryReturn" name="searchHmQueryReturn"/>
+  </message>
+  <message name="searchLookupValuesRequest">
+    <part element="ns:searchLookupValues" name="searchLookupValuesRequest"/>
+  </message>
+  <message name="searchLookupValuesResponse">
+    <part element="ns:searchLookupValuesReturn" name="searchLookupValuesReturn"/>
+  </message>
+  <message name="searchMatchRequest">
+    <part element="ns:searchMatch" name="searchMatchRequest"/>
+  </message>
+  <message name="searchMatchResponse">
+    <part element="ns:searchMatchReturn" name="searchMatchReturn"/>
+  </message>
+  <message name="searchQueryRequest">
+    <part element="ns:searchQuery" name="searchQueryRequest"/>
+  </message>
+  <message name="searchQueryResponse">
+    <part element="ns:searchQueryReturn" name="searchQueryReturn"/>
+  </message>
+  <message name="setPasswordRequest">
+    <part element="ns:setPassword" name="setPasswordRequest"/>
+  </message>
+  <message name="setPasswordResponse">
+    <part element="ns:setPasswordReturn" name="setPasswordReturn"/>
+  </message>
+  <message name="setRecordStateRequest">
+    <part element="ns:setRecordState" name="setRecordStateRequest"/>
+  </message>
+  <message name="setRecordStateResponse">
+    <part element="ns:setRecordStateReturn" name="setRecordStateReturn"/>
+  </message>
+  <message name="syncCustomResourcesRequest">
+    <part element="ns:syncCustomResources" name="syncCustomResourcesRequest"/>
+  </message>
+  <message name="syncCustomResourcesResponse">
+    <part element="ns:syncCustomResourcesReturn" name="syncCustomResourcesReturn"/>
+  </message>
+  <message name="tokenizeRequest">
+    <part element="ns:tokenize" name="tokenizeRequest"/>
+  </message>
+  <message name="tokenizeResponse">
+    <part element="ns:tokenizeReturn" name="tokenizeReturn"/>
+  </message>
+  <message name="unlinkRequest">
+    <part element="ns:unlink" name="unlinkRequest"/>
+  </message>
+  <message name="unlinkResponse">
+    <part element="ns:unlinkReturn" name="unlinkReturn"/>
+  </message>
+  <message name="unlink2Request">
+    <part element="ns:unlink2" name="unlink2Request"/>
+  </message>
+  <message name="unlink2Response">
+    <part element="ns:unlink2Return" name="unlink2Return"/>
+  </message>
+  <message name="unmergeRequest">
+    <part element="ns:unmerge" name="unmergeRequest"/>
+  </message>
+  <message name="unmergeResponse">
+    <part element="ns:unmergeReturn" name="unmergeReturn"/>
+  </message>
+  <message name="unregisterUsersRequest">
+    <part element="ns:unregisterUsers" name="unregisterUsersRequest"/>
+  </message>
+  <message name="unregisterUsersResponse">
+    <part element="ns:unregisterUsersReturn" name="unregisterUsersReturn"/>
+  </message>
+  <message name="updateMatchRecordRequest">
+    <part element="ns:updateMatchRecord" name="updateMatchRecordRequest"/>
+  </message>
+  <message name="updateMatchRecordResponse">
+    <part element="ns:updateMatchRecordReturn" name="updateMatchRecordReturn"/>
+  </message>
+  <message name="updateRelationshipRequest">
+    <part element="ns:updateRelationship" name="updateRelationshipRequest"/>
+  </message>
+  <message name="updateRelationshipResponse">
+    <part element="ns:updateRelationshipReturn" name="updateRelationshipReturn"/>
+  </message>
+  <message name="updateTaskRequest">
+    <part element="ns:updateTask" name="updateTaskRequest"/>
+  </message>
+  <message name="updateTaskResponse">
+    <part element="ns:updateTaskReturn" name="updateTaskReturn"/>
+  </message>
+  <message name="validateChangeListRequest">
+    <part element="ns:validateChangeList" name="validateChangeListRequest"/>
+  </message>
+  <message name="validateChangeListResponse">
+    <part element="ns:validateChangeListReturn" name="validateChangeListReturn"/>
+  </message>
+  <message name="validateMetadataRequest">
+    <part element="ns:validateMetadata" name="validateMetadataRequest"/>
+  </message>
+  <message name="validateMetadataResponse">
+    <part element="ns:validateMetadataReturn" name="validateMetadataReturn"/>
+  </message>
+  <message name="validateTasksRequest">
+    <part element="ns:validateTasks" name="validateTasksRequest"/>
+  </message>
+  <message name="validateTasksResponse">
+    <part element="ns:validateTasksReturn" name="validateTasksReturn"/>
+  </message>
+  <portType name="Soap">
+    <operation name="ExecuteBatchBackfill">
+      <input message="ns:ExecuteBatchBackfillRequest" name="ExecuteBatchBackfillRequest"/>
+      <output message="ns:ExecuteBatchBackfillResponse" name="ExecuteBatchBackfillResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="ExecuteBatchBackfillAll">
+      <input message="ns:ExecuteBatchBackfillAllRequest" name="ExecuteBatchBackfillAllRequest"/>
+      <output message="ns:ExecuteBatchBackfillAllResponse" name="ExecuteBatchBackfillAllResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="acceptUnmatchedRecordsAsUnique">
+      <input message="ns:acceptUnmatchedRecordsAsUniqueRequest" name="acceptUnmatchedRecordsAsUniqueRequest"/>
+      <output message="ns:acceptUnmatchedRecordsAsUniqueResponse" name="acceptUnmatchedRecordsAsUniqueResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="addRelationship">
+      <input message="ns:addRelationshipRequest" name="addRelationshipRequest"/>
+      <output message="ns:addRelationshipResponse" name="addRelationshipResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="applyChangeList">
+      <input message="ns:applyChangeListRequest" name="applyChangeListRequest"/>
+      <output message="ns:applyChangeListResponse" name="applyChangeListResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="assignUnmergedRecords">
+      <input message="ns:assignUnmergedRecordsRequest" name="assignUnmergedRecordsRequest"/>
+      <output message="ns:assignUnmergedRecordsResponse" name="assignUnmergedRecordsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="audit">
+      <input message="ns:auditRequest" name="auditRequest"/>
+      <output message="ns:auditResponse" name="auditResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="authenticate">
+      <input message="ns:authenticateRequest" name="authenticateRequest"/>
+      <output message="ns:authenticateResponse" name="authenticateResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="canUnmergeRecords">
+      <input message="ns:canUnmergeRecordsRequest" name="canUnmergeRecordsRequest"/>
+      <output message="ns:canUnmergeRecordsResponse" name="canUnmergeRecordsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="cleanTable">
+      <input message="ns:cleanTableRequest" name="cleanTableRequest"/>
+      <output message="ns:cleanTableResponse" name="cleanTableResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="cleanse">
+      <input message="ns:cleanseRequest" name="cleanseRequest"/>
+      <output message="ns:cleanseResponse" name="cleanseResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="cleansePut">
+      <input message="ns:cleansePutRequest" name="cleansePutRequest"/>
+      <output message="ns:cleansePutResponse" name="cleansePutResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="clearAssignedUnmergedRecords">
+      <input message="ns:clearAssignedUnmergedRecordsRequest" name="clearAssignedUnmergedRecordsRequest"/>
+      <output message="ns:clearAssignedUnmergedRecordsResponse" name="clearAssignedUnmergedRecordsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="createChangeList">
+      <input message="ns:createChangeListRequest" name="createChangeListRequest"/>
+      <output message="ns:createChangeListResponse" name="createChangeListResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="createTask">
+      <input message="ns:createTaskRequest" name="createTaskRequest"/>
+      <output message="ns:createTaskResponse" name="createTaskResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="delete">
+      <input message="ns:deleteRequest" name="deleteRequest"/>
+      <output message="ns:deleteResponse" name="deleteResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="deleteRelationship">
+      <input message="ns:deleteRelationshipRequest" name="deleteRelationshipRequest"/>
+      <output message="ns:deleteRelationshipResponse" name="deleteRelationshipResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="describeSiperianObject">
+      <input message="ns:describeSiperianObjectRequest" name="describeSiperianObjectRequest"/>
+      <output message="ns:describeSiperianObjectResponse" name="describeSiperianObjectResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchAutoMatchAndMerge">
+      <input message="ns:executeBatchAutoMatchAndMergeRequest" name="executeBatchAutoMatchAndMergeRequest"/>
+      <output message="ns:executeBatchAutoMatchAndMergeResponse" name="executeBatchAutoMatchAndMergeResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchAutomerge">
+      <input message="ns:executeBatchAutomergeRequest" name="executeBatchAutomergeRequest"/>
+      <output message="ns:executeBatchAutomergeResponse" name="executeBatchAutomergeResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchBVTSnapshot">
+      <input message="ns:executeBatchBVTSnapshotRequest" name="executeBatchBVTSnapshotRequest"/>
+      <output message="ns:executeBatchBVTSnapshotResponse" name="executeBatchBVTSnapshotResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchCleanStrp">
+      <input message="ns:executeBatchCleanStrpRequest" name="executeBatchCleanStrpRequest"/>
+      <output message="ns:executeBatchCleanStrpResponse" name="executeBatchCleanStrpResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchDelete">
+      <input message="ns:executeBatchDeleteRequest" name="executeBatchDeleteRequest"/>
+      <output message="ns:executeBatchDeleteResponse" name="executeBatchDeleteResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchExternalMatch">
+      <input message="ns:executeBatchExternalMatchRequest" name="executeBatchExternalMatchRequest"/>
+      <output message="ns:executeBatchExternalMatchResponse" name="executeBatchExternalMatchResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchExtractBVTVersions">
+      <input message="ns:executeBatchExtractBVTVersionsRequest" name="executeBatchExtractBVTVersionsRequest"/>
+      <output message="ns:executeBatchExtractBVTVersionsResponse" name="executeBatchExtractBVTVersionsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchGenerateMatchTokens">
+      <input message="ns:executeBatchGenerateMatchTokensRequest" name="executeBatchGenerateMatchTokensRequest"/>
+      <output message="ns:executeBatchGenerateMatchTokensResponse" name="executeBatchGenerateMatchTokensResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchGroup">
+      <input message="ns:executeBatchGroupRequest" name="executeBatchGroupRequest"/>
+      <output message="ns:executeBatchGroupResponse" name="executeBatchGroupResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchInitialSmartSearchIndexing">
+      <input message="ns:executeBatchInitialSmartSearchIndexingRequest" name="executeBatchInitialSmartSearchIndexingRequest"/>
+      <output message="ns:executeBatchInitialSmartSearchIndexingResponse" name="executeBatchInitialSmartSearchIndexingResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchKeyMatch">
+      <input message="ns:executeBatchKeyMatchRequest" name="executeBatchKeyMatchRequest"/>
+      <output message="ns:executeBatchKeyMatchResponse" name="executeBatchKeyMatchResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchLoad">
+      <input message="ns:executeBatchLoadRequest" name="executeBatchLoadRequest"/>
+      <output message="ns:executeBatchLoadResponse" name="executeBatchLoadResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchMatch">
+      <input message="ns:executeBatchMatchRequest" name="executeBatchMatchRequest"/>
+      <output message="ns:executeBatchMatchResponse" name="executeBatchMatchResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchMatchAnalyze">
+      <input message="ns:executeBatchMatchAnalyzeRequest" name="executeBatchMatchAnalyzeRequest"/>
+      <output message="ns:executeBatchMatchAnalyzeResponse" name="executeBatchMatchAnalyzeResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchPromote">
+      <input message="ns:executeBatchPromoteRequest" name="executeBatchPromoteRequest"/>
+      <output message="ns:executeBatchPromoteResponse" name="executeBatchPromoteResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchRecalculateBo">
+      <input message="ns:executeBatchRecalculateBoRequest" name="executeBatchRecalculateBoRequest"/>
+      <output message="ns:executeBatchRecalculateBoResponse" name="executeBatchRecalculateBoResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchRecalculateBvt">
+      <input message="ns:executeBatchRecalculateBvtRequest" name="executeBatchRecalculateBvtRequest"/>
+      <output message="ns:executeBatchRecalculateBvtResponse" name="executeBatchRecalculateBvtResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchResetMatchTable">
+      <input message="ns:executeBatchResetMatchTableRequest" name="executeBatchResetMatchTableRequest"/>
+      <output message="ns:executeBatchResetMatchTableResponse" name="executeBatchResetMatchTableResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchRevalidate">
+      <input message="ns:executeBatchRevalidateRequest" name="executeBatchRevalidateRequest"/>
+      <output message="ns:executeBatchRevalidateResponse" name="executeBatchRevalidateResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchStage">
+      <input message="ns:executeBatchStageRequest" name="executeBatchStageRequest"/>
+      <output message="ns:executeBatchStageResponse" name="executeBatchStageResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchSynchronize">
+      <input message="ns:executeBatchSynchronizeRequest" name="executeBatchSynchronizeRequest"/>
+      <output message="ns:executeBatchSynchronizeResponse" name="executeBatchSynchronizeResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchUnmerge">
+      <input message="ns:executeBatchUnmergeRequest" name="executeBatchUnmergeRequest"/>
+      <output message="ns:executeBatchUnmergeResponse" name="executeBatchUnmergeResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="executeBatchValidateFKRelationships">
+      <input message="ns:executeBatchValidateFKRelationshipsRequest" name="executeBatchValidateFKRelationshipsRequest"/>
+      <output message="ns:executeBatchValidateFKRelationshipsResponse" name="executeBatchValidateFKRelationshipsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="flagForAutomerge">
+      <input message="ns:flagForAutomergeRequest" name="flagForAutomergeRequest"/>
+      <output message="ns:flagForAutomergeResponse" name="flagForAutomergeResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="generateConstraints">
+      <input message="ns:generateConstraintsRequest" name="generateConstraintsRequest"/>
+      <output message="ns:generateConstraintsResponse" name="generateConstraintsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="get">
+      <input message="ns:getRequest" name="getRequest"/>
+      <output message="ns:getResponse" name="getResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getAggregatePeriod">
+      <input message="ns:getAggregatePeriodRequest" name="getAggregatePeriodRequest"/>
+      <output message="ns:getAggregatePeriodResponse" name="getAggregatePeriodResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getAssignableUsersForTasks">
+      <input message="ns:getAssignableUsersForTasksRequest" name="getAssignableUsersForTasksRequest"/>
+      <output message="ns:getAssignableUsersForTasksResponse" name="getAssignableUsersForTasksResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getAssignedRecords">
+      <input message="ns:getAssignedRecordsRequest" name="getAssignedRecordsRequest"/>
+      <output message="ns:getAssignedRecordsResponse" name="getAssignedRecordsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getBatchGroupStatus">
+      <input message="ns:getBatchGroupStatusRequest" name="getBatchGroupStatusRequest"/>
+      <output message="ns:getBatchGroupStatusResponse" name="getBatchGroupStatusResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getBvt">
+      <input message="ns:getBvtRequest" name="getBvtRequest"/>
+      <output message="ns:getBvtResponse" name="getBvtResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getEffectivePeriods">
+      <input message="ns:getEffectivePeriodsRequest" name="getEffectivePeriodsRequest"/>
+      <output message="ns:getEffectivePeriodsResponse" name="getEffectivePeriodsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getEntityGraph">
+      <input message="ns:getEntityGraphRequest" name="getEntityGraphRequest"/>
+      <output message="ns:getEntityGraphResponse" name="getEntityGraphResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getLookupValue">
+      <input message="ns:getLookupValueRequest" name="getLookupValueRequest"/>
+      <output message="ns:getLookupValueResponse" name="getLookupValueResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getLookupValues">
+      <input message="ns:getLookupValuesRequest" name="getLookupValuesRequest"/>
+      <output message="ns:getLookupValuesResponse" name="getLookupValuesResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getMatchedRecords">
+      <input message="ns:getMatchedRecordsRequest" name="getMatchedRecordsRequest"/>
+      <output message="ns:getMatchedRecordsResponse" name="getMatchedRecordsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getMergeHistory">
+      <input message="ns:getMergeHistoryRequest" name="getMergeHistoryRequest"/>
+      <output message="ns:getMergeHistoryResponse" name="getMergeHistoryResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getOneHop">
+      <input message="ns:getOneHopRequest" name="getOneHopRequest"/>
+      <output message="ns:getOneHopResponse" name="getOneHopResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getOrsList">
+      <input message="ns:getOrsListRequest" name="getOrsListRequest"/>
+      <output message="ns:getOrsListResponse" name="getOrsListResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getOrsMetadata">
+      <input message="ns:getOrsMetadataRequest" name="getOrsMetadataRequest"/>
+      <output message="ns:getOrsMetadataResponse" name="getOrsMetadataResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getResourcePrivileges">
+      <input message="ns:getResourcePrivilegesRequest" name="getResourcePrivilegesRequest"/>
+      <output message="ns:getResourcePrivilegesResponse" name="getResourcePrivilegesResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getSearchResults">
+      <input message="ns:getSearchResultsRequest" name="getSearchResultsRequest"/>
+      <output message="ns:getSearchResultsResponse" name="getSearchResultsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getSiperianObjectCompatibility">
+      <input message="ns:getSiperianObjectCompatibilityRequest" name="getSiperianObjectCompatibilityRequest"/>
+      <output message="ns:getSiperianObjectCompatibilityResponse" name="getSiperianObjectCompatibilityResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getSystemTrustSettings">
+      <input message="ns:getSystemTrustSettingsRequest" name="getSystemTrustSettingsRequest"/>
+      <output message="ns:getSystemTrustSettingsResponse" name="getSystemTrustSettingsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getTaskLineage">
+      <input message="ns:getTaskLineageRequest" name="getTaskLineageRequest"/>
+      <output message="ns:getTaskLineageResponse" name="getTaskLineageResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getTasks">
+      <input message="ns:getTasksRequest" name="getTasksRequest"/>
+      <output message="ns:getTasksResponse" name="getTasksResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getTrustGraphData">
+      <input message="ns:getTrustGraphDataRequest" name="getTrustGraphDataRequest"/>
+      <output message="ns:getTrustGraphDataResponse" name="getTrustGraphDataResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getTrustScore">
+      <input message="ns:getTrustScoreRequest" name="getTrustScoreRequest"/>
+      <output message="ns:getTrustScoreResponse" name="getTrustScoreResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getUnmergedRecordCount">
+      <input message="ns:getUnmergedRecordCountRequest" name="getUnmergedRecordCountRequest"/>
+      <output message="ns:getUnmergedRecordCountResponse" name="getUnmergedRecordCountResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getValidationStatus">
+      <input message="ns:getValidationStatusRequest" name="getValidationStatusRequest"/>
+      <output message="ns:getValidationStatusResponse" name="getValidationStatusResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="getXrefForEffectiveDate">
+      <input message="ns:getXrefForEffectiveDateRequest" name="getXrefForEffectiveDateRequest"/>
+      <output message="ns:getXrefForEffectiveDateResponse" name="getXrefForEffectiveDateResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="link">
+      <input message="ns:linkRequest" name="linkRequest"/>
+      <output message="ns:linkResponse" name="linkResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="link2">
+      <input message="ns:link2Request" name="link2Request"/>
+      <output message="ns:link2Response" name="link2Response"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="listSiperianObjects">
+      <input message="ns:listSiperianObjectsRequest" name="listSiperianObjectsRequest"/>
+      <output message="ns:listSiperianObjectsResponse" name="listSiperianObjectsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="merge">
+      <input message="ns:mergeRequest" name="mergeRequest"/>
+      <output message="ns:mergeResponse" name="mergeResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="multiMerge">
+      <input message="ns:multiMergeRequest" name="multiMergeRequest"/>
+      <output message="ns:multiMergeResponse" name="multiMergeResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="previewBvt">
+      <input message="ns:previewBvtRequest" name="previewBvtRequest"/>
+      <output message="ns:previewBvtResponse" name="previewBvtResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="promotePendingXrefs">
+      <input message="ns:promotePendingXrefsRequest" name="promotePendingXrefsRequest"/>
+      <output message="ns:promotePendingXrefsResponse" name="promotePendingXrefsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="put">
+      <input message="ns:putRequest" name="putRequest"/>
+      <output message="ns:putResponse" name="putResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="reassignRecords">
+      <input message="ns:reassignRecordsRequest" name="reassignRecordsRequest"/>
+      <output message="ns:reassignRecordsResponse" name="reassignRecordsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="registerCustomIndex">
+      <input message="ns:registerCustomIndexRequest" name="registerCustomIndexRequest"/>
+      <output message="ns:registerCustomIndexResponse" name="registerCustomIndexResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="registerCustomTableObject">
+      <input message="ns:registerCustomTableObjectRequest" name="registerCustomTableObjectRequest"/>
+      <output message="ns:registerCustomTableObjectResponse" name="registerCustomTableObjectResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="registerUsers">
+      <input message="ns:registerUsersRequest" name="registerUsersRequest"/>
+      <output message="ns:registerUsersResponse" name="registerUsersResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="removeMatchedRecords">
+      <input message="ns:removeMatchedRecordsRequest" name="removeMatchedRecordsRequest"/>
+      <output message="ns:removeMatchedRecordsResponse" name="removeMatchedRecordsResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="resetBatchGroup">
+      <input message="ns:resetBatchGroupRequest" name="resetBatchGroupRequest"/>
+      <output message="ns:resetBatchGroupResponse" name="resetBatchGroupResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="restore">
+      <input message="ns:restoreRequest" name="restoreRequest"/>
+      <output message="ns:restoreResponse" name="restoreResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="searchHmQuery">
+      <input message="ns:searchHmQueryRequest" name="searchHmQueryRequest"/>
+      <output message="ns:searchHmQueryResponse" name="searchHmQueryResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="searchLookupValues">
+      <input message="ns:searchLookupValuesRequest" name="searchLookupValuesRequest"/>
+      <output message="ns:searchLookupValuesResponse" name="searchLookupValuesResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="searchMatch">
+      <input message="ns:searchMatchRequest" name="searchMatchRequest"/>
+      <output message="ns:searchMatchResponse" name="searchMatchResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="searchQuery">
+      <input message="ns:searchQueryRequest" name="searchQueryRequest"/>
+      <output message="ns:searchQueryResponse" name="searchQueryResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="setPassword">
+      <input message="ns:setPasswordRequest" name="setPasswordRequest"/>
+      <output message="ns:setPasswordResponse" name="setPasswordResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="setRecordState">
+      <input message="ns:setRecordStateRequest" name="setRecordStateRequest"/>
+      <output message="ns:setRecordStateResponse" name="setRecordStateResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="syncCustomResources">
+      <input message="ns:syncCustomResourcesRequest" name="syncCustomResourcesRequest"/>
+      <output message="ns:syncCustomResourcesResponse" name="syncCustomResourcesResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="tokenize">
+      <input message="ns:tokenizeRequest" name="tokenizeRequest"/>
+      <output message="ns:tokenizeResponse" name="tokenizeResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="unlink">
+      <input message="ns:unlinkRequest" name="unlinkRequest"/>
+      <output message="ns:unlinkResponse" name="unlinkResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="unlink2">
+      <input message="ns:unlink2Request" name="unlink2Request"/>
+      <output message="ns:unlink2Response" name="unlink2Response"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="unmerge">
+      <input message="ns:unmergeRequest" name="unmergeRequest"/>
+      <output message="ns:unmergeResponse" name="unmergeResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="unregisterUsers">
+      <input message="ns:unregisterUsersRequest" name="unregisterUsersRequest"/>
+      <output message="ns:unregisterUsersResponse" name="unregisterUsersResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="updateMatchRecord">
+      <input message="ns:updateMatchRecordRequest" name="updateMatchRecordRequest"/>
+      <output message="ns:updateMatchRecordResponse" name="updateMatchRecordResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="updateRelationship">
+      <input message="ns:updateRelationshipRequest" name="updateRelationshipRequest"/>
+      <output message="ns:updateRelationshipResponse" name="updateRelationshipResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="updateTask">
+      <input message="ns:updateTaskRequest" name="updateTaskRequest"/>
+      <output message="ns:updateTaskResponse" name="updateTaskResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="validateChangeList">
+      <input message="ns:validateChangeListRequest" name="validateChangeListRequest"/>
+      <output message="ns:validateChangeListResponse" name="validateChangeListResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="validateMetadata">
+      <input message="ns:validateMetadataRequest" name="validateMetadataRequest"/>
+      <output message="ns:validateMetadataResponse" name="validateMetadataResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+    <operation name="validateTasks">
+      <input message="ns:validateTasksRequest" name="validateTasksRequest"/>
+      <output message="ns:validateTasksResponse" name="validateTasksResponse"/>
+      <fault message="ns:siperianRequestFault" name="siperianRequestFault"/>
+    </operation>
+  </portType>
+  <binding name="SoapBinding" type="ns:Soap">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="ExecuteBatchBackfill">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="ExecuteBatchBackfillRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="ExecuteBatchBackfillResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="ExecuteBatchBackfillAll">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="ExecuteBatchBackfillAllRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="ExecuteBatchBackfillAllResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="acceptUnmatchedRecordsAsUnique">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="acceptUnmatchedRecordsAsUniqueRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="acceptUnmatchedRecordsAsUniqueResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="addRelationship">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="addRelationshipRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="addRelationshipResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="applyChangeList">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="applyChangeListRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="applyChangeListResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="assignUnmergedRecords">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="assignUnmergedRecordsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="assignUnmergedRecordsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="audit">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="auditRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="auditResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="authenticate">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="authenticateRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="authenticateResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="canUnmergeRecords">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="canUnmergeRecordsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="canUnmergeRecordsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="cleanTable">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="cleanTableRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="cleanTableResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="cleanse">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="cleanseRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="cleanseResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="cleansePut">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="cleansePutRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="cleansePutResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="clearAssignedUnmergedRecords">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="clearAssignedUnmergedRecordsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="clearAssignedUnmergedRecordsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="createChangeList">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="createChangeListRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="createChangeListResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="createTask">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="createTaskRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="createTaskResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="delete">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="deleteRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="deleteResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="deleteRelationship">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="deleteRelationshipRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="deleteRelationshipResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="describeSiperianObject">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="describeSiperianObjectRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="describeSiperianObjectResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchAutoMatchAndMerge">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchAutoMatchAndMergeRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchAutoMatchAndMergeResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchAutomerge">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchAutomergeRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchAutomergeResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchBVTSnapshot">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchBVTSnapshotRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchBVTSnapshotResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchCleanStrp">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchCleanStrpRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchCleanStrpResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchDelete">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchDeleteRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchDeleteResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchExternalMatch">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchExternalMatchRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchExternalMatchResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchExtractBVTVersions">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchExtractBVTVersionsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchExtractBVTVersionsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchGenerateMatchTokens">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchGenerateMatchTokensRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchGenerateMatchTokensResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchGroup">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchGroupRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchGroupResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchInitialSmartSearchIndexing">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchInitialSmartSearchIndexingRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchInitialSmartSearchIndexingResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchKeyMatch">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchKeyMatchRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchKeyMatchResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchLoad">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchLoadRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchLoadResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchMatch">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchMatchRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchMatchResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchMatchAnalyze">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchMatchAnalyzeRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchMatchAnalyzeResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchPromote">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchPromoteRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchPromoteResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchRecalculateBo">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchRecalculateBoRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchRecalculateBoResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchRecalculateBvt">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchRecalculateBvtRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchRecalculateBvtResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchResetMatchTable">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchResetMatchTableRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchResetMatchTableResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchRevalidate">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchRevalidateRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchRevalidateResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchStage">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchStageRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchStageResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchSynchronize">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchSynchronizeRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchSynchronizeResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchUnmerge">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchUnmergeRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchUnmergeResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="executeBatchValidateFKRelationships">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="executeBatchValidateFKRelationshipsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="executeBatchValidateFKRelationshipsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="flagForAutomerge">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="flagForAutomergeRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="flagForAutomergeResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="generateConstraints">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="generateConstraintsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="generateConstraintsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="get">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getAggregatePeriod">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getAggregatePeriodRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getAggregatePeriodResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getAssignableUsersForTasks">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getAssignableUsersForTasksRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getAssignableUsersForTasksResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getAssignedRecords">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getAssignedRecordsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getAssignedRecordsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getBatchGroupStatus">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getBatchGroupStatusRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getBatchGroupStatusResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getBvt">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getBvtRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getBvtResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getEffectivePeriods">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getEffectivePeriodsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getEffectivePeriodsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getEntityGraph">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getEntityGraphRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getEntityGraphResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getLookupValue">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getLookupValueRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getLookupValueResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getLookupValues">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getLookupValuesRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getLookupValuesResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getMatchedRecords">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getMatchedRecordsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getMatchedRecordsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getMergeHistory">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getMergeHistoryRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getMergeHistoryResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getOneHop">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getOneHopRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getOneHopResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getOrsList">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getOrsListRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getOrsListResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getOrsMetadata">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getOrsMetadataRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getOrsMetadataResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getResourcePrivileges">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getResourcePrivilegesRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getResourcePrivilegesResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getSearchResults">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getSearchResultsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getSearchResultsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getSiperianObjectCompatibility">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getSiperianObjectCompatibilityRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getSiperianObjectCompatibilityResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getSystemTrustSettings">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getSystemTrustSettingsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getSystemTrustSettingsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getTaskLineage">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getTaskLineageRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getTaskLineageResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getTasks">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getTasksRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getTasksResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getTrustGraphData">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getTrustGraphDataRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getTrustGraphDataResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getTrustScore">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getTrustScoreRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getTrustScoreResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getUnmergedRecordCount">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getUnmergedRecordCountRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getUnmergedRecordCountResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getValidationStatus">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getValidationStatusRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getValidationStatusResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getXrefForEffectiveDate">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="getXrefForEffectiveDateRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="getXrefForEffectiveDateResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="link">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="linkRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="linkResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="link2">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="link2Request">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="link2Response">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="listSiperianObjects">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="listSiperianObjectsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="listSiperianObjectsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="merge">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="mergeRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="mergeResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="multiMerge">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="multiMergeRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="multiMergeResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="previewBvt">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="previewBvtRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="previewBvtResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="promotePendingXrefs">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="promotePendingXrefsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="promotePendingXrefsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="put">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="putRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="putResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="reassignRecords">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="reassignRecordsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="reassignRecordsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="registerCustomIndex">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="registerCustomIndexRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="registerCustomIndexResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="registerCustomTableObject">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="registerCustomTableObjectRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="registerCustomTableObjectResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="registerUsers">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="registerUsersRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="registerUsersResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="removeMatchedRecords">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="removeMatchedRecordsRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="removeMatchedRecordsResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="resetBatchGroup">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="resetBatchGroupRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="resetBatchGroupResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="restore">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="restoreRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="restoreResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="searchHmQuery">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="searchHmQueryRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="searchHmQueryResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="searchLookupValues">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="searchLookupValuesRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="searchLookupValuesResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="searchMatch">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="searchMatchRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="searchMatchResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="searchQuery">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="searchQueryRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="searchQueryResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="setPassword">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="setPasswordRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="setPasswordResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="setRecordState">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="setRecordStateRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="setRecordStateResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="syncCustomResources">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="syncCustomResourcesRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="syncCustomResourcesResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="tokenize">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="tokenizeRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="tokenizeResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="unlink">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="unlinkRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="unlinkResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="unlink2">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="unlink2Request">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="unlink2Response">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="unmerge">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="unmergeRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="unmergeResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="unregisterUsers">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="unregisterUsersRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="unregisterUsersResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="updateMatchRecord">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="updateMatchRecordRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="updateMatchRecordResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="updateRelationship">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="updateRelationshipRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="updateRelationshipResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="updateTask">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="updateTaskRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="updateTaskResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="validateChangeList">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="validateChangeListRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="validateChangeListResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="validateMetadata">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="validateMetadataRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="validateMetadataResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="validateTasks">
+      <wsdlsoap:operation soapAction=""/>
+      <input name="validateTasksRequest">
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output name="validateTasksResponse">
+        <wsdlsoap:body use="literal"/>
+      </output>
+      <fault name="siperianRequestFault">
+        <wsdlsoap:fault name="siperianRequestFault" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="SifService">
+    <port binding="ns:SoapBinding" name="Soap">
+  <!--     <wsdlsoap:address location="http://mdm-nonprod.informaticacloud.com:443/cmx/services/SifService"/>-->
+   <wsdlsoap:address location="https://mdm-nonprod.informaticacloud.com:443/wkdev/cmx/services/SifService"/>
+  
+    </port>
+  </service>
+</definitions>

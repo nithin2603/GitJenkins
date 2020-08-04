@@ -1,0 +1,533 @@
+/*
+  Version         Author           Date             Description
+ ---------     ------------    ------------     ---------------------
+   1.0.0          Bhavya        09/04/2018       Initial release
+*/
+
+CREATE COMPUTE MODULE MF_SearchMDMData_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE indata REFERENCE TO InputRoot.SOAP.Body.mdm:searchMDMRequest.searchMDM;
+		DECLARE inMetadata REFERENCE TO indata.uUIDMetaDataRequest;
+		DECLARE inSearchdata REFERENCE TO indata.searchMDMRequestData;
+				
+		DECLARE errorCount INTEGER 1;
+		DECLARE errorCountBoolean BOOLEAN FALSE;
+		DECLARE errorCode CHARACTER '0';
+		DECLARE customerrorMessage CHARACTER;
+		DECLARE CPflag,EPAflag INTEGER 1;
+			
+		DECLARE uuidValue CHARACTER inMetadata.uUID;
+		DECLARE callingSystemName CHARACTER inMetadata.callingSystemName;
+		DECLARE uniqueCallingUserId CHARACTER inMetadata.uniqueCallingUserId;
+		DECLARE requestDateTimeValue CHARACTER inMetadata.requestDateTime;
+		DECLARE targetSystemName CHARACTER inMetadata.targetSystemName;
+		DECLARE svcUserName CHARACTER inMetadata.sVCusername;
+		DECLARE svcPwd CHARACTER inMetadata.sVCpassword;
+		DECLARE SearchMDMResponse REFERENCE TO OutputRoot;
+		DECLARE errorMessages REFERENCE TO OutputRoot;
+		DECLARE UUIDMetaDataRequest REFERENCE TO OutputRoot;
+		DECLARE UUIDMetaDataResponse REFERENCE TO OutputRoot;
+		DECLARE SearchMDMResponseData REFERENCE TO OutputRoot;
+				
+		CREATE FIELD OutputRoot.SOAP.Body.mdm:searchMDMResponse AS SearchMDMResponse;
+		CREATE LASTCHILD OF SearchMDMResponse AS UUIDMetaDataRequest NAME 'uUIDMetaDataRequest';
+		CREATE LASTCHILD OF SearchMDMResponse AS UUIDMetaDataResponse NAME 'uUIDMetaDataResponse';
+		CREATE LASTCHILD OF SearchMDMResponse AS errorMessages NAME 'errorMessages';
+		CREATE LASTCHILD OF SearchMDMResponse AS SearchMDMResponseData NAME 'searchMDMResponseData';
+
+		IF uuidValue = '' or uuidValue is null THEN
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+
+			SET errorMessages.errorMessage[errorCount].errorMessageCode='400';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageCode='400';
+			SET errorMessages.errorMessage[errorCount].errorMessageDescription='Insufficient Mandatory Data provided to Service';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageDescription='UUID is blank/null';
+			SET errorMessages.errorMessage[errorCount].errorMessageId='400';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;
+		END IF;
+		
+		IF targetSystemName = '' or targetSystemName is null THEN
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+			SET errorMessages.errorMessage[errorCount].errorMessageCode='400';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageCode='400';
+			SET errorMessages.errorMessage[errorCount].errorMessageDescription='Insufficient Mandatory Data provided to Service';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageDescription='TargetSystemName is blank/null';
+			SET errorMessages.errorMessage[errorCount].errorMessageId='400';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;
+		END IF;
+		
+		IF callingSystemName = '' or callingSystemName is null THEN
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+
+			SET errorMessages.errorMessage[errorCount].errorMessageCode='400';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageCode='400';
+			SET errorMessages.errorMessage[errorCount].errorMessageDescription='Insufficient Mandatory Data provided to Service';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageDescription='callingSystemName is blank/null';
+			SET errorMessages.errorMessage[errorCount].errorMessageId='400';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;
+		END IF;
+		
+			IF uniqueCallingUserId = '' or uniqueCallingUserId is null THEN
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+
+			SET errorMessages.errorMessage[errorCount].errorMessageCode='400';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageCode='400';
+			SET errorMessages.errorMessage[errorCount].errorMessageDescription='Insufficient Mandatory Data provided to Service';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageDescription='uniqueCallingUserId is blank/null';
+			SET errorMessages.errorMessage[errorCount].errorMessageId='400';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;
+		END IF;
+		
+		IF requestDateTimeValue = '' or requestDateTimeValue is null THEN
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+			SET errorMessages.errorMessage[errorCount].errorMessageCode='400';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageCode='400';
+			SET errorMessages.errorMessage[errorCount].errorMessageDescription='Insufficient Mandatory Data provided to Service';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageDescription='RequestDateTimeValue is blank/null';
+			SET errorMessages.errorMessage[errorCount].errorMessageId='400';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;
+		END IF;
+		
+	/*	DECLARE authFlag BOOLEAN FALSE;
+		IF svcUserName = '' or svcUserName is null THEN
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+
+			SET errorMessages.errorMessage[errorCount].errorMessageCode='100';
+			SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].customErrorMessageCode='400';
+			SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].errorMessageDescription='Insufficient Mandatory Data provided to Service';
+			SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].customErrorMessageDescription='SVCuserName is blank/null';
+			SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].errorMessageID='100';
+			SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;
+			SET authFlag=TRUE;
+		END IF;
+		IF svcPwd = '' or svcPwd is null THEN
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+
+			SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].errorMessageCode='100';
+			SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].customErrorMessageCode='400';
+			SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].errorMessageDescription='Insufficient Mandatory Data provided to Service';
+			SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].customErrorMessageDescription='SVCpassword is blank/null';
+			SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].errorMessageID='100';
+			SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;
+			SET authFlag=TRUE;
+		END IF; */
+ 		
+ /**		IF authFlag=FALSE THEN
+		--	DECLARE bPassword BLOB BASE64DECODE(svcPwd); 
+		--	DECLARE cPassword CHARACTER CAST(bPassword AS CHARACTER CCSID 1208);
+			IF (svcUserName <> Environment.Variables.FileData.XMLNSC.Settings.SVCusername) AND (svcPwd <> Environment.Variables.FileData.XMLNSC.Settings.SVCpassword) THEN
+				IF errorCountBoolean=TRUE THEN
+					SET errorCount=errorCount+1;
+				END IF;
+				SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].errorMessageCode='412';
+				SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].customErrorMessageCode='412';
+				SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].errorMessageDescription='Invalid Data Input Value';
+				SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].customErrorMessageDescription='Invalid SVCusername or SVCpassword';
+				SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].errorMessageID='412';
+				SET OutputRoot.SOAP.Body.mdm:searchMDMResponse.errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+				SET errorCountBoolean=TRUE;
+			END IF;
+		END IF; **/
+		
+		
+		IF LENGTH(inSearchdata.searchType)<=0 OR (inSearchdata.searchType IS NULL) OR (inSearchdata.searchType = '') THEN
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+			SET errorMessages.errorMessage[errorCount].errorMessageCode='412';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageCode='412';
+			SET errorMessages.errorMessage[errorCount].errorMessageDescription='Insufficient Mandatory Data provided to Service';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageDescription='SearchType is blank/null';
+			SET errorMessages.errorMessage[errorCount].errorMessageId='412';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;
+		END IF;
+	
+	IF (inSearchdata.searchFields.customerName <> '') AND (LENGTH(inSearchdata.searchFields.customerName)< 3) THEN	
+--	IF LENGTH(inSearchdata.searchFields.customerName)< 3 THEN
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+			SET errorMessages.errorMessage[errorCount].errorMessageCode='412';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageCode='412';
+			SET errorMessages.errorMessage[errorCount].errorMessageDescription='Customer name must have atleast have 3 characters';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageDescription='Invalid customer name';
+			SET errorMessages.errorMessage[errorCount].errorMessageId='412';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;
+		END IF;
+	
+		IF (inSearchdata.searchFields.participantName <> '') AND (LENGTH(inSearchdata.searchFields.participantName)< 3) THEN
+--		IF LENGTH(inSearchdata.searchFields.participantName)< 3 THEN
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+			SET errorMessages.errorMessage[errorCount].errorMessageCode='412';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageCode='412';
+			SET errorMessages.errorMessage[errorCount].errorMessageDescription='Participant name must have atleast 3 characters';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageDescription='Invalid Participant name';
+			SET errorMessages.errorMessage[errorCount].errorMessageId='412';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;
+		END IF;
+		
+		IF (inSearchdata.searchFields.phone <> '') AND (LENGTH(inSearchdata.searchFields.phone) < 10) THEN
+	--	IF LENGTH(inSearchdata.searchFields.phone) < 10 THEN
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+			SET errorMessages.errorMessage[errorCount].errorMessageCode='412';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageCode='412';
+			SET errorMessages.errorMessage[errorCount].errorMessageDescription='Phonevalue must contain atleast 10 digits';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageDescription='Invalid phone value';
+			SET errorMessages.errorMessage[errorCount].errorMessageId='412';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;
+		END IF;
+		
+		IF inSearchdata.searchFields.searchTypeIDValue = '' THEN
+		IF (EXISTS(inSearchdata.searchFields.address[]) AND (inSearchdata.searchFields.address <> ''))  THEN
+			
+		IF ((inSearchdata.searchFields.customerName IS NOT NULL AND inSearchdata.searchFields.customerName <>'') or
+			 (inSearchdata.searchFields.participantName IS NOT NULL AND inSearchdata.searchFields.participantName <>'') or
+		 (inSearchdata.searchFields.email IS NOT NULL AND inSearchdata.searchFields.email <> '') or 
+		 (inSearchdata.searchFields.phone IS NOT NULL AND inSearchdata.searchFields.phone <>'')) THEN
+		 -- do nothing
+		 Else
+			IF errorCountBoolean=TRUE THEN
+				SET errorCount=errorCount+1;
+			END IF;
+			SET errorMessages.errorMessage[errorCount].errorMessageCode='412';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageCode='412';
+			SET errorMessages.errorMessage[errorCount].errorMessageDescription='Insufficient Mandatory Data provided to Service';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageDescription='Another searchfield required with address';
+			SET errorMessages.errorMessage[errorCount].errorMessageId='412';
+			SET errorMessages.errorMessage[errorCount].customErrorMessageLongDescription='';
+			SET errorCountBoolean=TRUE;		
+		END IF;
+		END IF;
+		END IF;
+		
+		IF errorCountBoolean = TRUE THEN
+			SET UUIDMetaDataRequest= Environment.UUIDMetaDataRequest;
+			SET UUIDMetaDataResponse.uUID=Environment.UUID;
+			SET UUIDMetaDataResponse.providerSystemName='IIB';
+			SET UUIDMetaDataResponse.responseDateTime= CURRENT_TIMESTAMP;
+			SET UUIDMetaDataResponse.authenticationSuccessfulFlag='Y';
+			SET UUIDMetaDataResponse.eSBHostName=Environment.HostName;
+			SET UUIDMetaDataResponse.eSBNodeName=BrokerName;
+		END IF;
+		
+		
+		IF errorCountBoolean= TRUE THEN
+			PROPAGATE TO TERMINAL 'out1';
+			RETURN FALSE;
+		END IF;
+		
+		DELETE FIELD OutputRoot.SOAP.Body.mdm:searchMDMResponse;
+		
+	-- Form MDM request	
+
+	SET Environment.Variables.SearchType =  UCASE(inSearchdata.searchType);
+	SET Environment.Variables.SearchScope =  UCASE(inSearchdata.searchScope);
+	DECLARE bPassword BLOB BASE64DECODE(Environment.Variables.FileData.XMLNSC.Settings.Password);
+	
+	--Check for SEARCH condition.
+	IF EXISTS(inSearchdata.searchScope[]) AND Environment.Variables.SearchScope = 'SEARCH' THEN
+	--	IF EXISTS(inSearchdata.searchFields.searchTypeIDValue[]) AND inSearchdata.searchFields.searchTypeIDValue <> '' THEN	
+			--Assign headers.
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:username = Environment.Variables.FileData.XMLNSC.Settings.Username;--'svellank';
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:password.sip:password = CAST(bPassword AS CHARACTER CCSID 1208);
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:password.sip:encrypted = Environment.Variables.FileData.XMLNSC.Settings.encrypted;
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:orsId = Environment.Variables.FileData.XMLNSC.Settings.orsId;
+			
+		  IF (Environment.Variables.SearchType = 'CUSTOMER') THEN
+			--search customer 			
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:siperianObjectUid =  Environment.Variables.FileData.XMLNSC.Settings.siperianObjectUidCustomer;--'PACKAGE.PKG_CUSTOMER_SEARCH';                                	
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:sortCriteria =  Environment.Variables.FileData.XMLNSC.Settings.sortCriteriaCustomerSearch;--'NAME DESC';   
+			If inSearchdata.searchFields.recordsToReturn IS NULL OR inSearchdata.searchFields.recordsToReturn = '' THEN
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordsToReturn =  '80';--40
+			ELSE 
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordsToReturn =  inSearchdata.searchFields.recordsToReturn; 
+			END IF;
+			If inSearchdata.searchFields.returnTotal IS NULL OR inSearchdata.searchFields.returnTotal = '' THEN
+				SET OutputRoot.SOAP.Body.sip:searchQuery.sip:returnTotal = Environment.Variables.FileData.XMLNSC.Settings.returnTotal;
+			 	SET Environment.Variables.returnTotal =  UCASE(FIELDVALUE(Environment.Variables.FileData.XMLNSC.Settings.returnTotal));
+				ELSE SET OutputRoot.SOAP.Body.sip:searchQuery.sip:returnTotal = inSearchdata.searchFields.returnTotal;
+				SET Environment.Variables.returnTotal =  UCASE(FIELDVALUE(inSearchdata.searchFields.returnTotal));
+			END IF;		
+			IF  UCASE(callingSystemName) = 'E1' THEN	
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:filterCriteria = Environment.Variables.FileData.XMLNSC.Settings.e1filterCriteria;
+			ELSEIF  UCASE(callingSystemName) = 'SFDC' THEN
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:filterCriteria = Environment.Variables.FileData.XMLNSC.Settings.sfdcfilterCriteria;	
+			END IF;
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:filterParameter.sip:stringValue = COALESCE(inSearchdata.searchFields.searchTypeIDValue,null);
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:disablePaging = Environment.Variables.FileData.XMLNSC.Settings.disablePaging;
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordState = Environment.Variables.FileData.XMLNSC.Settings.recordState;			
+		  ELSEIF  (Environment.Variables.SearchType = 'CONTACT') THEN
+			--search contact	
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:siperianObjectUid = Environment.Variables.FileData.XMLNSC.Settings.siperianObjectUidContact;  
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:sortCriteria = Environment.Variables.FileData.XMLNSC.Settings.sortCriteriaContactSearch;                            
+			If inSearchdata.searchFields.recordsToReturn IS NULL OR inSearchdata.searchFields.recordsToReturn = '' THEN
+				SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordsToReturn =  '80'; --40
+				ELSE SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordsToReturn =  inSearchdata.searchFields.recordsToReturn; 
+			END IF;
+			If inSearchdata.searchFields.returnTotal IS NULL OR inSearchdata.searchFields.returnTotal = '' THEN
+				SET OutputRoot.SOAP.Body.sip:searchQuery.sip:returnTotal = Environment.Variables.FileData.XMLNSC.Settings.returnTotal;
+				SET Environment.Variables.returnTotal =  UCASE(FIELDVALUE(Environment.Variables.FileData.XMLNSC.Settings.returnTotal));
+				ELSE SET OutputRoot.SOAP.Body.sip:searchQuery.sip:returnTotal = inSearchdata.searchFields.returnTotal;
+				SET Environment.Variables.returnTotal =  UCASE(FIELDVALUE(inSearchdata.searchFields.returnTotal));
+			END IF;
+			IF  UCASE(callingSystemName) = 'E1' THEN
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:filterCriteria = Environment.Variables.FileData.XMLNSC.Settings.e1filterCriteria; 
+			ELSEIF  UCASE(callingSystemName) = 'SFDC' THEN
+				SET OutputRoot.SOAP.Body.sip:searchQuery.sip:filterCriteria = Environment.Variables.FileData.XMLNSC.Settings.sfdcfilterCriteria;
+			END IF;
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:filterParameter.sip:stringValue = inSearchdata.searchFields.searchTypeIDValue;
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:disablePaging = Environment.Variables.FileData.XMLNSC.Settings.disablePaging; 
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordState = Environment.Variables.FileData.XMLNSC.Settings.recordState; 						
+		 END IF;		
+		 SET OutputLocalEnvironment.Destination.SOAP.Request.Operation = Environment.Variables.FileData.XMLNSC.Settings.OperationSearch;	
+	--  ELSE
+			
+	--	THROW USER EXCEPTION CATALOG 'NullSearchtypeIDValue' MESSAGE 412 VALUES ('SearchTypeIdValue cannot be null with SearchScope: SEARCH');
+	--	RETURN FALSE;
+	--  END IF;
+	
+	
+	----Like Search
+	
+	ELSEIF EXISTS(inSearchdata.searchScope[]) AND Environment.Variables.SearchScope = 'LIKESEARCH' THEN
+		SET OutputRoot.Properties.CodedCharSetId = 1208 ;
+	
+			--Assign headers.
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:username = Environment.Variables.FileData.XMLNSC.Settings.Username;--'svellank';
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:password.sip:password = CAST(bPassword AS CHARACTER CCSID 1208);
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:password.sip:encrypted = Environment.Variables.FileData.XMLNSC.Settings.encrypted;
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:orsId = Environment.Variables.FileData.XMLNSC.Settings.orsId;
+			
+		  IF (Environment.Variables.SearchType = 'CUSTOMER') THEN
+			--search customer 			
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:siperianObjectUid =  Environment.Variables.FileData.XMLNSC.Settings.siperianObjectUidCustomer;--'PACKAGE.PKG_CUSTOMER_SEARCH';         
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:sortCriteria =  Environment.Variables.FileData.XMLNSC.Settings.sortCriteriaCustomerlikeSearch;--'NAME ASC';                                	                       	
+			If inSearchdata.searchFields.recordsToReturn IS NULL OR inSearchdata.searchFields.recordsToReturn = '' THEN
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordsToReturn =  '80';--40
+			ELSE 
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordsToReturn =  inSearchdata.searchFields.recordsToReturn; 
+			END IF;
+			If inSearchdata.searchFields.returnTotal IS NULL OR inSearchdata.searchFields.returnTotal = '' THEN
+				SET OutputRoot.SOAP.Body.sip:searchQuery.sip:returnTotal = Environment.Variables.FileData.XMLNSC.Settings.returnTotal;
+			 	SET Environment.Variables.returnTotal =  UCASE(FIELDVALUE(Environment.Variables.FileData.XMLNSC.Settings.returnTotal));
+				ELSE SET OutputRoot.SOAP.Body.sip:searchQuery.sip:returnTotal = inSearchdata.searchFields.returnTotal;
+				SET Environment.Variables.returnTotal =  UCASE(FIELDVALUE(inSearchdata.searchFields.returnTotal));
+			END IF;		
+	
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:filterCriteria = CAST(Environment.Variables.FileData.XMLNSC.Settings.likefilterCriteriaCust AS CHARACTER CCSID 1208) ;	
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:filterParameter.sip:stringValue = COALESCE(inSearchdata.searchFields.customerName,null);
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:disablePaging = Environment.Variables.FileData.XMLNSC.Settings.disablePaging;
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordState = Environment.Variables.FileData.XMLNSC.Settings.recordState;			
+		  ELSEIF  (Environment.Variables.SearchType = 'CONTACT') THEN
+		  		DECLARE fpCount INTEGER 1;
+			--search contact	
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:siperianObjectUid = Environment.Variables.FileData.XMLNSC.Settings.siperianObjectUidContact;
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:sortCriteria = Environment.Variables.FileData.XMLNSC.Settings.sortCriteriaContactlikeSearch;  --'FULL_NAME, PARENT_NAME ASC'                           
+			If inSearchdata.searchFields.recordsToReturn IS NULL OR inSearchdata.searchFields.recordsToReturn = '' THEN
+				SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordsToReturn =  '80'; --40
+				ELSE SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordsToReturn =  inSearchdata.searchFields.recordsToReturn; 
+			END IF;
+			If inSearchdata.searchFields.returnTotal IS NULL OR inSearchdata.searchFields.returnTotal = '' THEN
+				SET OutputRoot.SOAP.Body.sip:searchQuery.sip:returnTotal = Environment.Variables.FileData.XMLNSC.Settings.returnTotal;
+				SET Environment.Variables.returnTotal =  UCASE(FIELDVALUE(Environment.Variables.FileData.XMLNSC.Settings.returnTotal));
+		   ELSE SET OutputRoot.SOAP.Body.sip:searchQuery.sip:returnTotal = inSearchdata.searchFields.returnTotal;
+				SET Environment.Variables.returnTotal =  UCASE(FIELDVALUE(inSearchdata.searchFields.returnTotal));
+			END IF;
+
+		SET OutputRoot.SOAP.Body.sip:searchQuery.sip:filterCriteria = CAST(Environment.Variables.FileData.XMLNSC.Settings.likefilterCriteriaContact AS CHARACTER CCSID 1208) ;--Environment.Variables.FileData.XMLNSC.Settings.likefilterCriteriaContact;
+
+		IF EXISTS(inSearchdata.searchFields.participantName[]) THEN
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:filterParameter[fpCount].sip:stringValue = COALESCE(inSearchdata.searchFields.participantName,null);
+			SET fpCount = fpCount + 1;
+		END IF;			
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:filterParameter[fpCount].sip:stringValue = COALESCE(inSearchdata.searchFields.customerName,null);
+		
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:disablePaging = Environment.Variables.FileData.XMLNSC.Settings.disablePaging; 
+			SET OutputRoot.SOAP.Body.sip:searchQuery.sip:recordState = Environment.Variables.FileData.XMLNSC.Settings.recordState; 						
+		 END IF;		
+		 SET OutputLocalEnvironment.Destination.SOAP.Request.Operation = Environment.Variables.FileData.XMLNSC.Settings.OperationSearch;	
+	
+	---LikeSearch
+	  
+	ELSE 
+
+		-- Form Match request
+			SET OutputRoot.SOAP.Body.sip:searchMatch.sip:username = Environment.Variables.FileData.XMLNSC.Settings.Username;
+			SET OutputRoot.SOAP.Body.sip:searchMatch.sip:password.sip:password = CAST(bPassword AS CHARACTER CCSID 1208);
+			SET OutputRoot.SOAP.Body.sip:searchMatch.sip:password.sip:encrypted = Environment.Variables.FileData.XMLNSC.Settings.encrypted;
+			SET OutputRoot.SOAP.Body.sip:searchMatch.sip:orsId = Environment.Variables.FileData.XMLNSC.Settings.orsId;
+			
+		IF (Environment.Variables.SearchType = 'CUSTOMER') THEN
+			--match customer
+	
+			SET OutputRoot.SOAP.Body.sip:searchMatch.sip:siperianObjectUid = Environment.Variables.FileData.XMLNSC.Settings.siperianObjectUidCustomer;
+			SET OutputRoot.SOAP.Body.sip:searchMatch.sip:sortCriteria = Environment.Variables.FileData.XMLNSC.Settings.sortCriteriaCustomer; 
+			
+			If inSearchdata.searchFields.recordsToReturn IS NULL OR inSearchdata.searchFields.recordsToReturn = '' THEN
+				SET OutputRoot.SOAP.Body.sip:searchMatch.sip:recordsToReturn =  '80'; --40
+				ELSE SET OutputRoot.SOAP.Body.sip:searchMatch.sip:recordsToReturn =  inSearchdata.searchFields.recordsToReturn;				
+			END IF;
+			If inSearchdata.searchFields.returnTotal IS NULL OR inSearchdata.searchFields.returnTotal = '' THEN
+				SET OutputRoot.SOAP.Body.sip:searchMatch.sip:returnTotal = 	Environment.Variables.FileData.XMLNSC.Settings.returnTotal;
+				SET Environment.Variables.returnTotal =  UCASE(FIELDVALUE(Environment.Variables.FileData.XMLNSC.Settings.returnTotal));
+				ELSE SET OutputRoot.SOAP.Body.sip:searchMatch.sip:returnTotal = inSearchdata.searchFields.returnTotal;
+				SET Environment.Variables.returnTotal =   UCASE(FIELDVALUE(inSearchdata.searchFields.returnTotal));
+			END IF;
+		
+			SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchType = Environment.Variables.FileData.XMLNSC.Settings.matchType;	
+			--Iterations
+					IF EXISTS(indata.searchMDMRequestData.searchFields[]) THEN 
+						DECLARE iterator INTEGER 1;
+						DECLARE searchField REFERENCE TO indata.searchMDMRequestData.searchFields.*;
+						
+							WHILE LASTMOVE (searchField) DO								
+								IF FIELDNAME(searchField) = 'customerName' and  FIELDVALUE(searchField) <> ''  THEN
+									 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:stringValue = FIELDVALUE(searchField);
+									 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:name = 'Organization_Name';
+									 	SET iterator = iterator + 1;
+								END IF;				
+								IF FIELDNAME(searchField) = 'address' and FIELDVALUE(searchField) <> '' THEN
+									 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:stringValue = FIELDVALUE(searchField);
+									 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:name = 'Address_Part2';
+									 	SET iterator = iterator + 1;
+								END IF;	
+								MOVE searchField NEXTSIBLING;
+							END WHILE;														
+					END IF;   
+			IF Environment.Variables.SearchScope  = 'STRICTERMATCH'  THEN 
+				SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchRuleSetUid = Environment.Variables.FileData.XMLNSC.Settings.strictMatchRuleSetUidCustomer;	
+			ELSE
+				SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchRuleSetUid = Environment.Variables.FileData.XMLNSC.Settings.matchRuleSetUidCustomer;	
+			END IF;    
+			
+		 
+		ELSEIF (Environment.Variables.SearchType = 'CONTACT') THEN
+		-- match contact
+		
+			SET OutputRoot.SOAP.Body.sip:searchMatch.sip:siperianObjectUid = Environment.Variables.FileData.XMLNSC.Settings.siperianObjectUidContact;                         
+			SET OutputRoot.SOAP.Body.sip:searchMatch.sip:sortCriteria = Environment.Variables.FileData.XMLNSC.Settings.sortCriteriaContact ;
+		 
+		 	If inSearchdata.searchFields.recordsToReturn IS NULL OR inSearchdata.searchFields.recordsToReturn = '' THEN
+				SET OutputRoot.SOAP.Body.sip:searchMatch.sip:recordsToReturn =  '80'; --40
+				ELSE SET OutputRoot.SOAP.Body.sip:searchMatch.sip:recordsToReturn =  inSearchdata.searchFields.recordsToReturn;				
+			END IF;
+			
+		
+			If inSearchdata.searchFields.returnTotal IS NULL OR inSearchdata.searchFields.returnTotal = '' THEN
+				SET OutputRoot.SOAP.Body.sip:searchMatch.sip:returnTotal = 	Environment.Variables.FileData.XMLNSC.Settings.returnTotal;
+				SET Environment.Variables.returnTotal =  UCASE(FIELDVALUE(Environment.Variables.FileData.XMLNSC.Settings.returnTotal));
+				ELSE SET OutputRoot.SOAP.Body.sip:searchMatch.sip:returnTotal = inSearchdata.searchFields.returnTotal;
+				SET Environment.Variables.returnTotal =   UCASE(FIELDVALUE(inSearchdata.searchFields.returnTotal));
+			END IF;
+			
+			SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchType = Environment.Variables.FileData.XMLNSC.Settings.matchType;	
+
+		--Iterations
+				IF EXISTS(indata.searchMDMRequestData.searchFields[]) THEN 
+					DECLARE searchField REFERENCE TO indata.searchMDMRequestData.searchFields.*;
+					DECLARE iterator INTEGER 1;
+				
+					
+						WHILE LASTMOVE (searchField) DO		
+							
+							IF FIELDNAME(searchField) = 'customerName' and  FIELDVALUE(searchField) <> ''  THEN
+								
+								SET CPflag = CPflag +1;
+								
+									 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:stringValue = FIELDVALUE(searchField);
+									 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:name = 'Organization_Name';
+									 	SET iterator = iterator + 1;
+								END IF;	
+													
+							IF FIELDNAME(searchField) = 'participantName' AND FIELDVALUE(searchField) <> ''   THEN
+								SET CPflag = CPflag +1;
+								 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:stringValue = FIELDVALUE(searchField);
+								 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:name = 'Person_Name';
+								 	SET iterator = iterator + 1;
+							END IF;				
+							IF FIELDNAME(searchField) = 'email' AND FIELDVALUE(searchField) <> '' THEN
+								SET EPAflag = EPAflag +1;
+								 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:stringValue = LCASE(FIELDVALUE(searchField));
+								 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:name = 'Email_Address';
+								 	SET iterator = iterator + 1;
+							END IF;	
+						IF Environment.Variables.SearchScope  = 'STRICTERMATCH'  THEN 	
+							--Do nothing
+						ELSE
+							IF FIELDNAME(searchField) = 'phone' AND FIELDVALUE(searchField) <> ''  THEN
+								SET EPAflag = EPAflag +1;
+								 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:stringValue = FIELDVALUE(searchField);
+								 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:name = 'Phone_Number';
+								 	SET iterator = iterator + 1;
+							END IF;
+						END IF;
+							IF FIELDNAME(searchField) = 'address' AND FIELDVALUE(searchField)<> '' THEN
+								SET EPAflag = EPAflag +1;
+								 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:stringValue = FIELDVALUE(searchField);
+								 	SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchColumnField[iterator].sip:name = 'Address_Part2';
+								 	SET iterator = iterator + 1;
+							END IF;
+							MOVE searchField NEXTSIBLING;
+						END WHILE;																	
+				END IF;
+				 
+				IF Environment.Variables.SearchScope  = 'STRICTERMATCH'  THEN 
+					SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchRuleSetUid = Environment.Variables.FileData.XMLNSC.Settings.strictMatchRuleSetUidContact;	
+				ELSEIF CPflag = 3 and EPAflag = 1 THEN
+					SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchRuleSetUid = Environment.Variables.FileData.XMLNSC.Settings.matchRuleSetUidCustContact;
+				ELSE
+					SET OutputRoot.SOAP.Body.sip:searchMatch.sip:matchRuleSetUid = Environment.Variables.FileData.XMLNSC.Settings.matchRuleSetUidContact;		
+			END IF;
+					
+		END IF;
+		SET OutputLocalEnvironment.Destination.SOAP.Request.Operation = Environment.Variables.FileData.XMLNSC.Settings.OperationMatch;
+	END IF;
+	
+		SET OutputLocalEnvironment.Destination.SOAP.Request.Transport.HTTP.WebServiceURL = Environment.Variables.FileData.XMLNSC.Settings.MDMUrl;
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;

@@ -1,0 +1,3055 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+    project:   Informatica MDM
+    copyright: Informatica LLC. (c) 2003-2013.  All rights reserved.
+
+		--><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:siperian.api" xmlns="urn:siperian.api" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" xmlns:mdns="urn:metadata.siperian.api" xmlns:ns="urn:siperian.api" xmlns:rns="urn:siperian.api" xmlns:tns="urn:types.siperian.api" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<xsd:import namespace="urn:types.siperian.api" schemaLocation="MDMWSDL_InlineSchema1.xsd"/>
+	<xsd:import namespace="urn:metadata.siperian.api" schemaLocation="MDMWSDL_InlineSchema2.xsd"/>
+
+	<xsd:complexType name="SiperianRequestFault">
+		<xsd:sequence>
+			<xsd:element name="requestName" type="xsd:string"/>
+			<xsd:element name="errorCode" type="xsd:string"/>
+			<xsd:element name="errorMessage" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="SiperianRequestFault" type="SiperianRequestFault"/>
+	<xsd:complexType name="SiperianRequestException">
+		<xsd:sequence>
+			<xsd:element name="requestName" type="xsd:string"/>
+			<xsd:element name="errorCode" type="xsd:string"/>
+			<xsd:element name="errorMessage" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="SiperianRequestException" type="SiperianRequestException"/>
+	
+	<xsd:complexType name="Password">
+		<xsd:sequence>
+			<xsd:element name="password" type="xsd:string"/>
+			<xsd:element default="false" name="encrypted" type="xsd:boolean"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+    <xsd:complexType name="AsynchronousOptions">
+		<xsd:sequence>
+			<xsd:element default="false" name="isAsynchronous" type="xsd:boolean"/>
+			<xsd:element minOccurs="0" name="jmsReplyTo" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="jmsCorrelationId" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="SiperianRequest">
+        <xsd:annotation>
+        	<xsd:documentation>This is the base type for all requests.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="username" nillable="true" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="password" nillable="true" type="Password"/>
+            <xsd:element minOccurs="0" name="securityPayload" nillable="true" type="xsd:hexBinary"/>
+            <xsd:element minOccurs="0" name="orsId" nillable="true" type="tns:OrsId"/>
+						<xsd:element minOccurs="0" name="interactionId" nillable="true" type="tns:InteractionId"/>
+			<xsd:element minOccurs="0" name="asynchronousOptions" type="AsynchronousOptions"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+    <xsd:complexType name="SiperianObjectRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element name="siperianObjectUid" type="tns:SiperianObjectUid"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="SiperianResponse">
+        <xsd:annotation>
+        	<xsd:documentation>This is the base type for all responses.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element minOccurs="0" name="message" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="interactionId" nillable="true" type="tns:InteractionId"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="GBID">
+        <xsd:annotation>
+        	<xsd:documentation>This is a Global Business Identifier which can be used as a key for a data object. 'name' is the name of the collumn in the data object containing the GBID. 'value' is the GBID value.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element name="columnUid" type="tns:SiperianObjectUid"/>
+			<xsd:element name="value" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="RecordKey">
+        <xsd:annotation>
+        	<xsd:documentation>This is used to identify a record in a Siperian object (base object, ...). A combination of system name, rowid, source key, GBID can be used to identify a unique record.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+        	<xsd:element minOccurs="0" name="systemName" type="tns:SystemName"/>
+        	<xsd:element minOccurs="0" name="rowid" type="tns:Rowid"/>
+        	<xsd:element minOccurs="0" name="sourceKey" type="tns:SourceKey"/>
+            <xsd:element maxOccurs="1" minOccurs="0" name="periodStartDate" type="xsd:dateTime"/>
+            <xsd:element maxOccurs="1" minOccurs="0" name="periodEndDate" type="xsd:dateTime"/>
+        	<xsd:element maxOccurs="unbounded" minOccurs="0" name="GBID" type="GBID"/>
+            <xsd:element maxOccurs="1" minOccurs="0" name="rowidXref" type="tns:Rowid"/>
+        </xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="XrefKey">
+        <xsd:annotation>
+        	<xsd:documentation>This is used to identify a record in a Siperian Xref object. A combination of system name and source key can be used to identify a unique record.</xsd:documentation>
+        </xsd:annotation>
+        	<xsd:choice maxOccurs="1" minOccurs="0">
+       	        <xsd:sequence>
+                    <xsd:element name="systemName" type="tns:SystemName"/>
+                    <xsd:element name="sourceKey" type="tns:SourceKey"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="periodStartDate" type="xsd:dateTime"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="periodEndDate" type="xsd:dateTime"/>
+                </xsd:sequence>
+       	        <xsd:element name="rowidXref" type="tns:Rowid"/>
+        	</xsd:choice>
+	</xsd:complexType>
+
+	<xsd:complexType name="Parameter">
+        <xsd:annotation>
+        	<xsd:documentation>A single data parameter within a data record - has a value.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+ 			<xsd:choice maxOccurs="1" minOccurs="0">
+				<xsd:element name="stringValue" type="xsd:string"/>
+				<xsd:element name="bigIntegerValue" type="xsd:integer"/>
+				<xsd:element name="bigDecimalValue" type="xsd:decimal"/>
+				<xsd:element name="dateValue" type="xsd:dateTime"/>
+				<xsd:element name="booleanValue" type="xsd:boolean"/>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="Field">
+        <xsd:annotation>
+        	<xsd:documentation>A single data field within a data record - has a name and a value.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+          <xsd:extension base="Parameter">
+	        <xsd:sequence>
+				<xsd:element name="name" type="xsd:string"/>
+			</xsd:sequence>
+		  </xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="TrustOverrideField">
+            <xsd:complexContent>
+                  <xsd:extension base="Field">
+                        <xsd:sequence>
+                              <xsd:element name="trustOverride" type="TrustSetting"/>
+                        </xsd:sequence>
+                  </xsd:extension>
+            </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="MatchPathField">
+                <xsd:complexContent>
+                      <xsd:extension base="Field">
+                            <xsd:sequence>
+                                  <xsd:element name="matchPathUID" type="xsd:string"/>
+                            </xsd:sequence>
+                      </xsd:extension>
+                </xsd:complexContent>
+    </xsd:complexType>
+
+	<xsd:complexType name="TrustEnabledField">
+            <xsd:complexContent>
+                  <xsd:extension base="Field">
+                        <xsd:sequence>
+                              <xsd:element minOccurs="0" name="trustScore" type="xsd:float"/>
+                              <xsd:element minOccurs="0" name="survivor" type="xsd:boolean"/>
+                              <xsd:element minOccurs="0" name="trustSetting" type="TrustSetting"/>
+                        </xsd:sequence>
+                  </xsd:extension>
+            </xsd:complexContent>
+    </xsd:complexType>
+    
+	<xsd:complexType name="BvtField">
+            <xsd:complexContent>
+                  <xsd:extension base="Field">
+                        <xsd:sequence>
+                              <xsd:element minOccurs="0" name="rowidLineage" type="tns:Rowid"/>
+                              <xsd:element minOccurs="0" name="sourceKey" type="xsd:string"/>
+                              <xsd:element minOccurs="0" name="systemName" type="xsd:string"/>
+                        </xsd:sequence>
+                  </xsd:extension>
+            </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="RecordTypes">
+      <xsd:sequence>
+        <xsd:element default="true" maxOccurs="1" minOccurs="0" name="package" type="xsd:boolean"/>
+        <xsd:element default="false" maxOccurs="1" minOccurs="0" name="xref" type="xsd:boolean"/>
+        <xsd:element default="false" maxOccurs="1" minOccurs="0" name="pendingXref" type="xsd:boolean"/>
+        <xsd:element default="false" maxOccurs="1" minOccurs="0" name="deletedXref" type="xsd:boolean"/>
+        <xsd:element default="false" maxOccurs="1" minOccurs="0" name="history" type="xsd:boolean"/>
+        <xsd:element default="false" maxOccurs="1" minOccurs="0" name="xrefHistory" type="xsd:boolean"/>
+        <xsd:element default="false" maxOccurs="1" minOccurs="0" name="raw" type="xsd:boolean"/>
+      </xsd:sequence>
+    </xsd:complexType>    
+
+    <xsd:simpleType name="MatchType">
+      <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="AUTO"/>
+        <xsd:enumeration value="BOTH"/>
+        <xsd:enumeration value="DBFILTERED"/>
+        <xsd:enumeration value="NONE"/>
+      </xsd:restriction>
+    </xsd:simpleType> 
+
+    <xsd:complexType name="Record">
+        <xsd:annotation>
+            <xsd:documentation>This is a single record of data.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:choice maxOccurs="unbounded" minOccurs="0">
+                <xsd:element name="field" type="Field"/>
+                <xsd:element name="trustOverrideField" type="TrustOverrideField"/>
+                <xsd:element name="trustEnabledField" type="TrustEnabledField"/>
+                <xsd:element name="matchPathField" type="MatchPathField"/>
+                <xsd:element name="bvtField" type="BvtField"/>
+            </xsd:choice>
+            <xsd:element name="siperianObjectUid" type="tns:SiperianObjectUid"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="HMRecord">
+        <xsd:complexContent>
+            <xsd:extension base="Record">
+                <xsd:sequence>
+                	<xsd:element name="recordKey" type="RecordKey"/>
+                	<xsd:element name="aggregatePeriodStartDate"/>
+                	<xsd:element name="aggregatePeriodEndDate"/>
+                	<xsd:element name="notInEffect" type="xsd:boolean"/>
+                	<xsd:element name="lockedByInteractionId" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:simpleType name="ActionType">
+      <xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Insert"/>
+			<xsd:enumeration value="Update"/>
+			<xsd:enumeration value="Accept as Unique"/>
+			<xsd:enumeration value="Merge"/>
+			<xsd:enumeration value="Delete"/>
+			<xsd:enumeration value="Update XREF"/>
+			<xsd:enumeration value="Merge Update"/>
+			<xsd:enumeration value="UnMerge"/>
+			<xsd:enumeration value="No Action"/>
+			<xsd:enumeration value="Pending Insert"/>
+			<xsd:enumeration value="Pending Update"/>
+			<xsd:enumeration value="Pending Update XREF"/>
+			<xsd:enumeration value="Promote Pending XREF"/>
+			<xsd:enumeration value="BO set to Delete"/>
+			<xsd:enumeration value="XREF set to Delete"/>
+			<xsd:enumeration value="BO Delete"/>
+			<xsd:enumeration value="XREF Delete"/>
+			<xsd:enumeration value="AM Rule Event"/>
+      </xsd:restriction>
+    </xsd:simpleType> 
+
+    <xsd:simpleType name="RecordState">
+      <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="CONSOLIDATED"/>
+        <xsd:enumeration value="UNMERGED"/>
+        <xsd:enumeration value="QUEUED_FOR_MATCH"/>
+        <xsd:enumeration value="NEWLY_LOADED"/>
+        <xsd:enumeration value="ON_HOLD"/>
+      </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="LookupField">
+        <xsd:annotation>
+        	<xsd:documentation>This is used to identify a column in a base object. uid can be use to identify the column and value is for look up.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element name="uid" type="tns:SiperianObjectUid"/>
+			<xsd:element name="value" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="ComparisonOperator">
+      <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="EQUALS"/>
+        <xsd:enumeration value="NOT_EQUALS"/>
+        <xsd:enumeration value="GREATER_THAN"/>
+        <xsd:enumeration value="GREATER_THAN_OR_EQUAL"/>
+        <xsd:enumeration value="LESS_THAN"/>
+        <xsd:enumeration value="LESS_THAN_OR_EQUAL"/>
+        <xsd:enumeration value="LIKE"/>
+        <xsd:enumeration value="LIKE_ANYWHERE"/>
+        <xsd:enumeration value="LIKE_STARTS_WITH"/>
+        <xsd:enumeration value="LIKE_ENDS_WITH"/>
+        <xsd:enumeration value="NOT_LIKE"/>
+        <xsd:enumeration value="NOT_LIKE_ANYWHERE"/>
+        <xsd:enumeration value="NOT_LIKE_STARTS_WITH"/>
+        <xsd:enumeration value="NOT_LIKE_ENDS_WITH"/>
+      </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="TrustTimeUnit">
+      <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="Day"/>
+        <xsd:enumeration value="Week"/>
+        <xsd:enumeration value="Month"/>
+        <xsd:enumeration value="Quarter"/>
+        <xsd:enumeration value="Year"/>
+      </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="TrustGraphType">
+      <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="Linear"/>
+        <xsd:enumeration value="Slow Initial, Rapid Later"/>
+        <xsd:enumeration value="Rapid Initial, Slow Later"/>
+      </xsd:restriction>
+    </xsd:simpleType>
+
+	<xsd:complexType name="TrustSetting">
+        <xsd:annotation>
+        	<xsd:documentation>This is used to describe trust settings for a column.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element name="custom" type="xsd:boolean"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="maximumTrust" type="xsd:integer"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="minimumTrust" type="xsd:integer"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="timeUnit" type="TrustTimeUnit"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="maximumTimeUnits" type="xsd:integer"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="graphType" type="TrustGraphType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="TrustGraphData">
+        <xsd:annotation>
+        	<xsd:documentation>This is used to describe trust settings for a column.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="date" type="xsd:date"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="trustValue" type="xsd:integer"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="MergeHistoryNode">
+        <xsd:annotation>
+        	<xsd:documentation>This is a node in the merge history tree of a BO record.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element name="rowid" type="tns:Rowid"/>
+			<xsd:element name="mergeDate" type="xsd:dateTime"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="historyNode" type="MergeHistoryNode"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="SiperianObjectRecordKey">
+        <xsd:annotation>
+        	<xsd:documentation>This is a recordKey plus a siperianObjectUid to identify the entity type.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element name="recordKey" type="RecordKey"/>
+			<xsd:element name="siperianObjectUid" type="tns:SiperianObjectUid"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+    <xsd:complexType name="OneHopFilter">
+        <xsd:annotation>
+        	<xsd:documentation>This is used to specifies filtering criteria.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="hierarchies" type="xsd:string"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="relTypes" type="xsd:string"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="relDirections" type="xsd:string"/>
+			<xsd:element default="true" name="activeRelsOnly" type="xsd:boolean"/>            			
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="EntityGraphFilter">
+		<xsd:complexContent>
+			<xsd:extension base="OneHopFilter">
+				<xsd:sequence>
+					<xsd:element name="maximumDepth" type="xsd:integer"/>
+					<xsd:element name="maximumBreadth" type="xsd:integer"/>
+					<xsd:element name="maximumRelationships" type="xsd:integer"/>
+					<xsd:element default="true" minOccurs="0" name="countLeafRelations" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+    <xsd:complexType name="EntityFilterCriteria">
+        <xsd:annotation>
+        	<xsd:documentation>This is used to filter entities by data values.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="entityTypeUid" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="filterCriteria" type="xsd:string"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="filterParameter" type="Parameter"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="EntityInfo">
+        <xsd:annotation>
+        	<xsd:documentation>This is used to specifies an entity infomation.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="siperianObjectRecordKey" type="SiperianObjectRecordKey"/>
+			<xsd:element name="relationshipCount" type="xsd:integer"/>
+			<xsd:element name="traversed" type="xsd:boolean"/>
+			<xsd:element name="listNode" type="xsd:boolean"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="XrefResult">
+        <xsd:annotation>
+        	<xsd:documentation>This is used to provide success/failure information on individual xrefs.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element name="xrefKey" type="XrefKey"/>
+			<xsd:element name="success" type="xsd:boolean"/>
+			<xsd:element name="message" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="RecordResult">
+        <xsd:annotation>
+        	<xsd:documentation>This is used to provide success/failure information on individual records.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element name="recordKey" type="RecordKey"/>
+			<xsd:element name="success" type="xsd:boolean"/>
+			<xsd:element name="message" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+    <xsd:simpleType name="HubState">
+      <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="ACTIVE"/>
+        <xsd:enumeration value="PENDING"/>
+        <xsd:enumeration value="DELETED"/>
+      </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="AuthenticateRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="authenticate" type="AuthenticateRequest"/>
+	<xsd:complexType name="AuthenticateResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="roleName" type="xsd:string"/>
+					<xsd:element name="passwordExpires" nillable="false" type="xsd:boolean"/>
+					<xsd:element minOccurs="0" name="passwordExpirationDate" nillable="true" type="xsd:dateTime"/>
+					<xsd:element name="externalAuthentication" nillable="false" type="xsd:boolean"/>
+					<xsd:element name="administrator" nillable="false" type="xsd:boolean"/>
+					<xsd:element minOccurs="0" name="username" nillable="true" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="authenticateReturn" type="AuthenticateResponse"/>
+
+    	<xsd:complexType name="GetOrsListRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getOrsList" type="GetOrsListRequest"/>
+	<xsd:complexType name="GetOrsListResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="ors" type="mdns:MetaDataOrs"/>					
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getOrsListReturn" type="GetOrsListResponse"/>
+
+	<xsd:complexType name="GetRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="systemName" type="tns:SystemName"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="recordTypes" type="RecordTypes"/>
+					<xsd:element default="false" maxOccurs="1" minOccurs="0" name="returnTrustScores" type="xsd:boolean"/>
+					<xsd:element default="false" maxOccurs="1" minOccurs="0" name="returnLineage" type="xsd:boolean"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="effectiveDate" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="historyDate" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="dataFilter" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="get" type="GetRequest"/>
+	<xsd:complexType name="GetResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+			        <xsd:element maxOccurs="unbounded" minOccurs="0" name="record" type="Record"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="lastUpdateDate" type="xsd:dateTime"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="lastUpdatingXref" type="XrefKey"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="aggregatePeriodStartDate" type="xsd:dateTime"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="aggregatePeriodEndDate" type="xsd:dateTime"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="lockedByInteractionId" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getReturn" type="GetResponse"/>
+
+	<xsd:complexType name="GetXrefForEffectiveDateRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+			        <xsd:element maxOccurs="unbounded" minOccurs="0" name="systemName" type="tns:SystemName"/>
+			        <xsd:element maxOccurs="3" minOccurs="0" name="recordState" type="HubState"/>					<xsd:element maxOccurs="1" minOccurs="0" name="effectiveDate" type="xsd:dateTime"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="historyDate" type="xsd:dateTime"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="dataFilter" type="xsd:string"/>
+			        <xsd:element default="false" maxOccurs="1" minOccurs="0" name="otherPeriods" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getXrefForEffectiveDate" type="GetXrefForEffectiveDateRequest"/>
+	
+	<xsd:complexType name="GetXrefForEffectiveDateResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+			        <xsd:element maxOccurs="unbounded" minOccurs="0" name="record" type="Record"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="aggregatePeriodStartDate" type="xsd:dateTime"/>
+        			<xsd:element maxOccurs="1" minOccurs="0" name="aggregatePeriodEndDate" type="xsd:dateTime"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getXrefForEffectiveDateReturn" type="GetXrefForEffectiveDateResponse"/>
+
+    <xsd:complexType name="GetAggregatePeriodRequest">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianObjectRequest">
+                <xsd:sequence>
+                    <xsd:element name="recordKey" type="RecordKey"/>
+                	<xsd:element maxOccurs="1" minOccurs="0" name="effectiveDate" type="xsd:dateTime"/>
+                	<xsd:element maxOccurs="unbounded" minOccurs="0" name="join" type="JoinObjectType"/>
+                	<xsd:element maxOccurs="2" minOccurs="0" name="recordState" type="HubState"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getAggregatePeriod" type="GetAggregatePeriodRequest"/>
+    
+    <xsd:complexType name="GetAggregatePeriodResponse">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianResponse">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="aggregatePeriodStartDate" type="xsd:dateTime"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="aggregatePeriodEndDate" type="xsd:dateTime"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getAggregatePeriodReturn" type="GetAggregatePeriodResponse"/>
+	
+	<xsd:complexType name="EffectivePeriod">
+        <xsd:sequence>
+            <xsd:element name="startDate" type="xsd:dateTime"/>
+            <xsd:element name="endDate" type="xsd:dateTime"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="GetEffectivePeriodsRequest">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianObjectRequest">
+                <xsd:sequence>
+                    <xsd:element minOccurs="1" name="recordKey" type="RecordKey"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="historyDate" type="xsd:dateTime"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getEffectivePeriods" type="GetEffectivePeriodsRequest"/>
+
+    <xsd:complexType name="GetEffectivePeriodsResponse">
+        <xsd:sequence>
+            <xsd:element name="recordKey" type="RecordKey"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="effectivePeriod" type="EffectivePeriod"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getEffectivePeriodsReturn" type="GetEffectivePeriodsResponse"/>
+	
+	
+<xsd:complexType name="PutRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+					<xsd:element name="record" type="Record"/>
+					<xsd:element default="false" name="generateSourceKey" type="xsd:boolean"/>
+					<xsd:element minOccurs="0" name="lastUpdateDate" nillable="true" type="xsd:dateTime"/>
+					<xsd:element default="false" minOccurs="0" name="bypassPostLoadUE" type="xsd:boolean"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="periodStartDate" type="xsd:dateTime"/>
+		        	<xsd:element maxOccurs="1" minOccurs="0" name="periodEndDate" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="timeLineAction" type="xsd:integer"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="periodReferenceDate" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="isFillOnGap" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="put" type="PutRequest"/>
+	<xsd:complexType name="PutResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+					<xsd:element name="actionType" type="ActionType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="putReturn" type="PutResponse"/>
+
+	<xsd:complexType name="TokenizeRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+					<xsd:element name="actionType" type="ActionType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="tokenize" type="TokenizeRequest"/>
+	<xsd:complexType name="TokenizeResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="tokenizeReturn" type="TokenizeResponse"/>
+
+	<xsd:complexType name="MergeRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="sourceRecordKey" type="RecordKey"/>
+					<xsd:element name="targetRecordKey" type="RecordKey"/>
+					<xsd:element minOccurs="0" name="taskId" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="merge" type="MergeRequest"/>
+	<xsd:complexType name="MergeResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="mergeReturn" type="MergeResponse"/>
+
+    <xsd:complexType name="ProcessRulesRequest">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianRequest">
+                <xsd:sequence>
+                    <xsd:element name="async" nillable="true" type="xsd:boolean"/>
+                    <xsd:element name="rulesInputSiperianObjectUid" nillable="false" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="activityName" type="xsd:string"/>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="relatedRecordKeys" type="LocalRecordKey"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="LocalRecordKey">
+        <xsd:complexContent>
+            <xsd:extension base="RecordKey">
+                <xsd:sequence>
+                    <xsd:element name="siperianObjectUid" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element name="processRules" type="ProcessRulesRequest"/>
+    <xsd:complexType name="ProcessRulesResponse">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianResponse"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element name="processRulesReturn" type="ProcessRulesResponse"/>
+
+	<xsd:complexType name="SetPasswordRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element name="newPassword" nillable="false" type="Password"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="setPassword" type="SetPasswordRequest"/>
+	<xsd:complexType name="SetPasswordResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="setPasswordReturn" type="SetPasswordResponse"/>
+
+	<xsd:complexType name="UnmergeRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="xrefKey" nillable="false" type="XrefKey"/>
+					<xsd:element name="treeUnmerge" nillable="false" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="unmerge" type="UnmergeRequest"/>
+	<xsd:complexType name="UnmergeResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="recordKey" type="RecordKey"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="unmergeReturn" type="UnmergeResponse"/>
+
+	<xsd:complexType name="AuditRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="component" type="xsd:string"/>
+					<xsd:element name="action" type="xsd:string"/>
+					<xsd:element name="rowidAuditPrevious" type="tns:Rowid"/>
+					<xsd:element name="status" type="xsd:string"/>
+					<xsd:element name="fromSystem" type="tns:SystemName"/>
+					<xsd:element name="toSystem" type="tns:SystemName"/>
+					<xsd:element name="rowidObject" type="tns:Rowid"/>
+					<xsd:element name="context" type="xsd:string"/>
+					<xsd:element name="contextXML" type="xsd:string"/>
+					<xsd:element name="dataXML" type="xsd:string"/>					
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="audit" type="AuditRequest"/>
+	<xsd:complexType name="AuditResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="rowidAudit" type="tns:Rowid"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="auditReturn" type="AuditResponse"/>
+
+	<xsd:complexType name="CleanseRequest">
+	    <xsd:complexContent>
+	       <xsd:extension base="SiperianRequest">
+	           <xsd:sequence>
+					<xsd:element name="cleanseFunctionName" type="tns:CleanseFunctionName"/>
+					<xsd:element name="record" type="Record"/>
+				</xsd:sequence>
+	       </xsd:extension>
+	    </xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="cleanse" type="CleanseRequest"/>
+	<xsd:complexType name="CleanseResponse">
+	    <xsd:complexContent>
+	       <xsd:extension base="SiperianResponse">
+	       <xsd:sequence>
+	           	<xsd:element maxOccurs="unbounded" minOccurs="1" name="record" type="Record"/>
+				</xsd:sequence>
+	       </xsd:extension>
+	    </xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="cleanseReturn" type="CleanseResponse"/>
+	
+	<xsd:complexType name="CleansePutRequest">
+	    <xsd:complexContent>
+	       <xsd:extension base="SiperianRequest">
+	           <xsd:sequence>
+					<xsd:element minOccurs="0" name="systemName" type="tns:SystemName"/>
+					<xsd:element name="record" type="Record"/>
+					<xsd:element default="false" name="generateSourceKey" type="xsd:boolean"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="timeLineAction" type="xsd:integer"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="periodReferenceDate" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="isFillOnGap" type="xsd:boolean"/>
+				</xsd:sequence>
+	       </xsd:extension>
+	    </xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="cleansePut" type="CleansePutRequest"/>
+	<xsd:complexType name="CleansePutResponse">
+	    <xsd:complexContent>
+	       <xsd:extension base="PutResponse">
+	           	<xsd:sequence>
+			   		<xsd:element minOccurs="0" name="dependentSourceKey" nillable="true" type="tns:DependentSourceKey"/>
+				</xsd:sequence>
+	       </xsd:extension>
+	    </xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="cleansePutReturn" type="CleansePutResponse"/>
+	
+	<xsd:complexType name="SetRecordStateRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="recordKey" type="RecordKey"/>
+					<xsd:element name="recordState" type="RecordState"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="setRecordState" type="SetRecordStateRequest"/>
+	<xsd:complexType name="SetRecordStateResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="setRecordStateReturn" type="SetRecordStateResponse"/>
+	
+	<xsd:complexType name="GetLookupValueRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="lookupField" type="LookupField"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getLookupValue" type="GetLookupValueRequest"/>
+	<xsd:complexType name="GetLookupValueResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="record" type="Record"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getLookupValueReturn" type="GetLookupValueResponse"/>
+	
+	<xsd:complexType name="GetLookupValuesRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="columnUid" type="tns:SiperianObjectUid"/>
+					<xsd:element name="valuesToReturn" type="xsd:integer"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getLookupValues" type="GetLookupValuesRequest"/>
+	<xsd:complexType name="GetLookupValuesResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+			        <xsd:element maxOccurs="unbounded" minOccurs="0" name="record" type="Record"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getLookupValuesReturn" type="GetLookupValuesResponse"/>
+
+	<!--
+		Discovery APIs
+	-->
+	<xsd:complexType name="ListSiperianObjectsRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+                    <xsd:element name="userResourcesOnly" nillable="false" type="xsd:boolean"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="objectType" nillable="true" type="mdns:MetaDataRequestObjectTypes"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="parentUid" nillable="true" type="tns:SiperianObjectUid"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="privilege" nillable="true" type="mdns:PrivilegeType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="listSiperianObjects" type="ListSiperianObjectsRequest"/>
+	<xsd:complexType name="ListSiperianObjectsResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="metaDataObject" type="mdns:MetaDataListResponseObject"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="listSiperianObjectsReturn" type="ListSiperianObjectsResponse"/>
+
+	<xsd:complexType name="DescribeSiperianObjectRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="uid" type="tns:SiperianObjectUid"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="describeSiperianObject" type="DescribeSiperianObjectRequest"/>
+	<xsd:complexType name="DescribeSiperianObjectResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="metaDataObject" type="mdns:MetaDataResponseObject"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="describeSiperianObjectReturn" type="DescribeSiperianObjectResponse"/>
+	
+	<xsd:complexType name="SearchMatchRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SearchRequestBase">
+				<xsd:sequence>
+					<xsd:element name="matchType" type="MatchType"/>
+			        <xsd:element maxOccurs="unbounded" minOccurs="0" name="recordsToMatch" type="Record"/>
+			        <xsd:element maxOccurs="unbounded" minOccurs="0" name="matchColumnField" type="Field"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="matchRuleSetUid" type="tns:SiperianObjectUid"/>
+			        <xsd:element maxOccurs="unbounded" minOccurs="0" name="matchColumnUid" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="disablePaging" type="xsd:boolean"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="includePending" type="xsd:boolean"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="filterCriteria" type="xsd:boolean">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                A parametrized condition clause. Ex. COLUMN.C_PARTY|FIRST_NAME = ?
+                            </xsd:documentation>
+                        </xsd:annotation>
+					</xsd:element>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="filterParameter" type="Parameter">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                A list list of parameters  values for binding.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="searchMatch" type="SearchMatchRequest"/>
+	<xsd:complexType name="SearchMatchResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SearchResponseBase"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="searchMatchReturn" type="SearchMatchResponse"/>
+
+	<!--
+		Merge APIs
+	-->
+	<xsd:complexType name="GetMergeHistoryRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getMergeHistory" type="GetMergeHistoryRequest"/>
+	<xsd:complexType name="GetMergeHistoryResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="historyTree" type="MergeHistoryNode"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getMergeHistoryReturn" type="GetMergeHistoryResponse"/>
+
+	<xsd:complexType name="CanUnmergeRecordsRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="xrefKey" nillable="false" type="XrefKey"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="canUnmergeRecords" type="CanUnmergeRecordsRequest"/>
+	<xsd:complexType name="CanUnmergeRecordsResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="canUnmerge" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="canUnmergeRecordsReturn" type="CanUnmergeRecordsResponse"/>
+
+	<xsd:complexType name="GetTrustScoreRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>				
+					<xsd:element name="columnUid" nillable="false" type="tns:SiperianObjectUid"/>
+					<xsd:element name="recordKey" type="RecordKey"/>
+					<xsd:element name="trustSetting" nillable="false" type="TrustSetting"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getTrustScore" type="GetTrustScoreRequest"/>
+	<xsd:complexType name="GetTrustScoreResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="trustScore" type="xsd:float"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getTrustScoreReturn" type="GetTrustScoreResponse"/>
+
+	<xsd:complexType name="GetSystemTrustSettingsRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="columnUid" nillable="false" type="tns:SiperianObjectUid"/>
+					<xsd:element name="systemName" nillable="false" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getSystemTrustSettings" type="GetSystemTrustSettingsRequest"/>
+	<xsd:complexType name="GetSystemTrustSettingsResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="trustSetting" type="TrustSetting"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getSystemTrustSettingsReturn" type="GetSystemTrustSettingsResponse"/>
+
+	<xsd:complexType name="GetTrustGraphDataRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>				
+					<xsd:element name="trustSetting" type="TrustSetting"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getTrustGraphData" type="GetTrustGraphDataRequest"/>
+	<xsd:complexType name="GetTrustGraphDataResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="trustGraphData" type="TrustGraphData"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getTrustGraphDataReturn" type="GetTrustGraphDataResponse"/>
+
+	<xsd:complexType name="AcceptUnmatchedRecordsAsUniqueRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="assignedOnly" nillable="false" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="acceptUnmatchedRecordsAsUnique" type="AcceptUnmatchedRecordsAsUniqueRequest"/>
+	<xsd:complexType name="AcceptUnmatchedRecordsAsUniqueResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="acceptCount" type="xsd:integer"/>
+				</xsd:sequence>
+</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="acceptUnmatchedRecordsAsUniqueReturn" type="AcceptUnmatchedRecordsAsUniqueResponse"/>
+
+    <xsd:complexType name="CleanTableRequest">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianObjectRequest">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="cleanStaging" nillable="false" type="xsd:boolean"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="useTruncate" nillable="false" type="xsd:boolean"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="cleanTable" type="CleanTableRequest"/>
+    <xsd:complexType name="CleanTableResponse">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianResponse"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="cleanTableReturn" type="CleanTableResponse"/>
+
+    <xsd:complexType name="ExecuteBatchRequest">
+        <xsd:complexContent>
+           <xsd:extension base="SiperianRequest">
+               <xsd:sequence>
+                    <xsd:element name="tableName" type="xsd:string"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ExecuteBatchResponse">
+        <xsd:complexContent>
+           <xsd:extension base="SiperianResponse">
+                <xsd:sequence>
+                    <xsd:element name="retCode" type="xsd:integer"/>
+                    <xsd:element name="errorCode" type="xsd:string"/>
+                     <xsd:element name="jobRunStatus" type="xsd:integer"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ExecuteBatchStageRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchStage" type="ExecuteBatchStageRequest"/>
+    <xsd:complexType name="ExecuteBatchStageResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchStageReturn" type="ExecuteBatchStageResponse"/>
+
+    <xsd:complexType name="ExecuteBatchLoadRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                    <xsd:element name="forceUpdateInd" type="xsd:boolean"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchLoad" type="ExecuteBatchLoadRequest"/>
+    <xsd:complexType name="ExecuteBatchLoadResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchLoadReturn" type="ExecuteBatchLoadResponse"/>
+
+    <xsd:complexType name="ExecuteBatchGenerateMatchTokensRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                    <xsd:element name="fullRestripInd" type="xsd:integer"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchGenerateMatchTokens" type="ExecuteBatchGenerateMatchTokensRequest"/>
+    <xsd:complexType name="ExecuteBatchGenerateMatchTokensResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchGenerateMatchTokensReturn" type="ExecuteBatchGenerateMatchTokensResponse"/>
+
+    <xsd:complexType name="ExecuteBatchCleanStrpRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchCleanStrp" type="ExecuteBatchCleanStrpRequest"/>
+    <xsd:complexType name="ExecuteBatchCleanStrpResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchCleanStrpReturn" type="ExecuteBatchCleanStrpResponse"/>
+
+    <xsd:complexType name="ExecuteBatchExtractBVTVersionsRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="1" name="limitDate" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="useHistory" type="xsd:boolean"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchExtractBVTVersions" type="ExecuteBatchExtractBVTVersionsRequest"/>
+    <xsd:complexType name="ExecuteBatchExtractBVTVersionsResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchExtractBVTVersionsReturn" type="ExecuteBatchExtractBVTVersionsResponse"/>
+
+    <xsd:complexType name="ExecuteBatchMatchRootRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                    <xsd:element name="validateTableName" type="xsd:string"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="ExecuteBatchMatchRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchMatchRootRequest">
+               <xsd:sequence>
+                    <xsd:element name="matchSetName" type="xsd:string"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchMatch" type="ExecuteBatchMatchRequest"/>
+    <xsd:complexType name="ExecuteBatchMatchResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchMatchReturn" type="ExecuteBatchMatchResponse"/>
+
+    <xsd:complexType name="ExecuteBatchMatchAnalyzeRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchMatchRootRequest">
+               <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchMatchAnalyze" type="ExecuteBatchMatchAnalyzeRequest"/>
+    <xsd:complexType name="ExecuteBatchMatchAnalyzeResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchMatchAnalyzeReturn" type="ExecuteBatchMatchAnalyzeResponse"/>
+
+    <xsd:complexType name="ExecuteBatchAutomergeRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchAutomerge" type="ExecuteBatchAutomergeRequest"/>
+    <xsd:complexType name="ExecuteBatchAutomergeResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchAutomergeReturn" type="ExecuteBatchAutomergeResponse"/>
+
+    <xsd:complexType name="ExecuteBatchAutoMatchAndMergeRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                    <xsd:element name="matchSetName" type="xsd:string"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchAutoMatchAndMerge" type="ExecuteBatchAutoMatchAndMergeRequest"/>
+    <xsd:complexType name="ExecuteBatchAutoMatchAndMergeResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchAutoMatchAndMergeReturn" type="ExecuteBatchAutoMatchAndMergeResponse"/>
+
+    <xsd:complexType name="ExecuteBatchBVTSnapshotRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchBVTSnapshot" type="ExecuteBatchBVTSnapshotRequest"/>
+    <xsd:complexType name="ExecuteBatchBVTSnapshotResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchBVTSnapshotReturn" type="ExecuteBatchBVTSnapshotResponse"/>
+
+    <xsd:complexType name="ExecuteBatchExternalMatchRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                    <xsd:element name="matchSetName" type="xsd:string"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchExternalMatch" type="ExecuteBatchExternalMatchRequest"/>
+    <xsd:complexType name="ExecuteBatchExternalMatchResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchExternalMatchReturn" type="ExecuteBatchExternalMatchResponse"/>
+
+    <xsd:complexType name="ExecuteBatchKeyMatchRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchKeyMatch" type="ExecuteBatchKeyMatchRequest"/>
+    <xsd:complexType name="ExecuteBatchKeyMatchResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchKeyMatchReturn" type="ExecuteBatchKeyMatchResponse"/>
+
+    <xsd:complexType name="ExecuteBatchPromoteRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                    <xsd:element name="xrefListToBePromoted" type="xsd:string"/>
+                    <xsd:element name="allowCommitInd" type="xsd:boolean"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchPromote" type="ExecuteBatchPromoteRequest"/>
+    <xsd:complexType name="ExecuteBatchPromoteResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchPromoteReturn" type="ExecuteBatchPromoteResponse"/>
+
+    <xsd:complexType name="ExecuteBatchResetMatchTableRequest">
+        <xsd:complexContent>
+           <xsd:extension base="SiperianRequest">
+               <xsd:sequence>
+                    <xsd:element name="tableName" type="xsd:string"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchResetMatchTable" type="ExecuteBatchResetMatchTableRequest"/>
+    <xsd:complexType name="ExecuteBatchResetMatchTableResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchResetMatchTableReturn" type="ExecuteBatchResetMatchTableResponse"/>
+
+    <xsd:complexType name="ExecuteBatchRevalidateRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                    <xsd:element name="onlyCmDirtyInd" type="xsd:boolean"/>
+                    <xsd:element name="recalcBvtInd" type="xsd:boolean"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchRevalidate" type="ExecuteBatchRevalidateRequest"/>
+    <xsd:complexType name="ExecuteBatchRevalidateResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchRevalidateReturn" type="ExecuteBatchRevalidateResponse"/>
+
+    <xsd:complexType name="ExecuteBatchSynchronizeRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                    <xsd:element name="onlyCmDirtyInd" type="xsd:boolean"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchSynchronize" type="ExecuteBatchSynchronizeRequest"/>
+    <xsd:complexType name="ExecuteBatchSynchronizeResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchSynchronizeReturn" type="ExecuteBatchSynchronizeResponse"/>
+
+    <xsd:complexType name="ExecuteBatchRecalculateBoRequest">
+        <xsd:complexContent>
+           <xsd:extension base="SiperianRequest">
+               <xsd:sequence>
+                    <xsd:element name="tableName" type="xsd:string"/>
+                    <xsd:element name="rowidObjectTable" type="xsd:string"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchRecalculateBo" type="ExecuteBatchRecalculateBoRequest"/>
+    <xsd:complexType name="ExecuteBatchRecalculateBoResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchRecalculateBoReturn" type="ExecuteBatchRecalculateBoResponse"/>
+
+    <xsd:complexType name="ExecuteBatchRecalculateBvtRequest">
+        <xsd:complexContent>
+           <xsd:extension base="SiperianRequest">
+               <xsd:sequence>
+                    <xsd:element name="tableName" type="xsd:string"/>
+                    <xsd:element name="rowidObject" type="xsd:string"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchRecalculateBvt" type="ExecuteBatchRecalculateBvtRequest"/>
+    <xsd:complexType name="ExecuteBatchRecalculateBvtResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchRecalculateBvtReturn" type="ExecuteBatchRecalculateBvtResponse"/>
+
+    <xsd:complexType name="ExecuteBatchValidateFKRelationshipsRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                    <xsd:element name="listRowidColumn" type="xsd:string"/>
+                    <xsd:element name="cascadeValidateInd" type="xsd:boolean"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchValidateFKRelationships" type="ExecuteBatchValidateFKRelationshipsRequest"/>
+    <xsd:complexType name="ExecuteBatchValidateFKRelationshipsResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchValidateFKRelationshipsReturn" type="ExecuteBatchValidateFKRelationshipsResponse"/>
+	
+    <xsd:complexType name="ExecuteBatchUnmergeRequest">
+        <xsd:complexContent>
+           <xsd:extension base="SiperianRequest">
+               <xsd:sequence>
+                    <xsd:element name="tableName" type="xsd:string"/>
+                    <xsd:element name="sourceTableName" type="xsd:string"/>
+                    <xsd:element name="outputTableName" type="xsd:string"/>
+                    <xsd:element name="treeUnmerge" nillable="false" type="xsd:boolean"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchUnmerge" type="ExecuteBatchUnmergeRequest"/>
+    <xsd:complexType name="ExecuteBatchUnmergeResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                    <xsd:element name="processedXrefsCount" type="xsd:integer"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchUnmergeReturn" type="ExecuteBatchUnmergeResponse"/>
+    
+    <xsd:complexType name="ExecuteBatchDeleteRequest">
+        <xsd:complexContent>
+           <xsd:extension base="SiperianRequest">
+               <xsd:sequence>
+                    <xsd:element name="tableName" type="xsd:string"/>
+                    <xsd:element name="sourceTableName" type="xsd:string"/>
+                    <xsd:element name="recalculateBvt" nillable="true" type="xsd:boolean"/>
+                    <xsd:element name="cascading" nillable="true" type="xsd:boolean"/>
+                    <xsd:element name="overrideHistory" nillable="true" type="xsd:boolean"/>
+                    <xsd:element name="purgeHistory" nillable="true" type="xsd:boolean"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchDelete" type="ExecuteBatchDeleteRequest"/>
+    <xsd:complexType name="ExecuteBatchDeleteResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                    <xsd:element name="processedXrefsCount" type="xsd:integer"/>
+                    <xsd:element name="processedBosCount" type="xsd:integer"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchDeleteReturn" type="ExecuteBatchDeleteResponse"/>
+
+    <xsd:complexType name="RegisterCustomIndexRequest">
+        <xsd:complexContent>
+           <xsd:extension base="SiperianRequest">
+               <xsd:sequence>
+                    <xsd:element name="tableName" type="xsd:string"/>
+                    <xsd:element name="rowidColList" type="xsd:string"/>
+                    <xsd:element name="indexType" type="xsd:string"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="registerCustomIndex" type="RegisterCustomIndexRequest"/>
+    <xsd:complexType name="RegisterCustomIndexResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="registerCustomIndexReturn" type="RegisterCustomIndexResponse"/>
+
+    <xsd:complexType name="RegisterCustomTableObjectRequest">
+        <xsd:complexContent>
+           <xsd:extension base="SiperianRequest">
+               <xsd:sequence>
+                    <xsd:element name="rowidTable" type="xsd:string"/>
+                    <xsd:element name="objFuncTypeCode" type="xsd:string"/>
+                    <xsd:element name="objFuncTypeDesc" type="xsd:string"/>
+                    <xsd:element name="objectName" type="xsd:string"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="registerCustomTableObject" type="RegisterCustomTableObjectRequest"/>
+    <xsd:complexType name="RegisterCustomTableObjectResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="registerCustomTableObjectReturn" type="RegisterCustomTableObjectResponse"/>
+
+    <xsd:complexType name="GenerateConstraintsRequest">
+        <xsd:complexContent>
+           <xsd:extension base="SiperianRequest">
+               <xsd:sequence>
+                    <xsd:element name="tableName" type="xsd:string"/>
+                    <xsd:element name="scope" type="xsd:string"/>
+                    <xsd:element name="abortOnFail" type="xsd:boolean"/>
+                    <xsd:element name="setFkDisabled" type="xsd:boolean"/>
+                    <xsd:element name="analyze" type="xsd:boolean"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="generateConstraints" type="GenerateConstraintsRequest"/>
+    <xsd:complexType name="GenerateConstraintsResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="generateConstraintsReturn" type="GenerateConstraintsResponse"/>
+    
+    <xsd:complexType name="ExecuteBatchBackfillRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                    <xsd:element name="rowidObjectTable" type="xsd:string"/>
+                    <xsd:element name="dirtyOnlyInd" type="xsd:boolean"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="ExecuteBatchBackfill" type="ExecuteBatchBackfillRequest"/>
+    <xsd:complexType name="ExecuteBatchBackfillResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="ExecuteBatchBackfillReturn" type="ExecuteBatchBackfillResponse"/>
+    
+    <xsd:complexType name="ExecuteBatchBackfillAllRequest">
+        <xsd:complexContent>
+           <xsd:extension base="SiperianRequest">
+               <xsd:sequence>
+                    <xsd:element name="dirtyOnlyInd" type="xsd:boolean"/>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="ExecuteBatchBackfillAll" type="ExecuteBatchBackfillAllRequest"/>
+    <xsd:complexType name="ExecuteBatchBackfillAllResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="ExecuteBatchBackfillAllReturn" type="ExecuteBatchBackfillAllResponse"/>
+
+	<xsd:complexType name="GetUnmergedRecordCountRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="assignedRecords" nillable="false" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getUnmergedRecordCount" type="GetUnmergedRecordCountRequest"/>
+	<xsd:complexType name="GetUnmergedRecordCountResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="recordCount" type="xsd:integer"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getUnmergedRecordCountReturn" type="GetUnmergedRecordCountResponse"/>
+	
+	<xsd:complexType name="ClearAssignedUnmergedRecordsRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="clearAssignedUnmergedRecords" type="ClearAssignedUnmergedRecordsRequest"/>
+	<xsd:complexType name="ClearAssignedUnmergedRecordsResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="clearAssignedUnmergedRecordsReturn" type="ClearAssignedUnmergedRecordsResponse"/>
+	
+    <xsd:complexType name="ExecuteBatchInitialSmartSearchIndexingRequest">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchRequest">
+               <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchInitialSmartSearchIndexing" type="ExecuteBatchInitialSmartSearchIndexingRequest"/>
+    <xsd:complexType name="ExecuteBatchInitialSmartSearchIndexingResponse">
+        <xsd:complexContent>
+           <xsd:extension base="ExecuteBatchResponse">
+                <xsd:sequence>
+                </xsd:sequence>
+           </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchInitialSmartSearchIndexingReturn" type="ExecuteBatchInitialSmartSearchIndexingResponse"/>
+	
+	<xsd:complexType name="ReassignRecordsRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="recordKey" type="RecordKey"/>
+					<xsd:element name="userUid" nillable="false" type="tns:SiperianObjectUid"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="reassignRecords" type="ReassignRecordsRequest"/>
+	<xsd:complexType name="ReassignRecordsResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="reassignRecordsReturn" type="ReassignRecordsResponse"/>
+	
+	<xsd:complexType name="AssignUnmergedRecordsRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="recordsToAssign" type="xsd:integer"/>
+					<xsd:element name="filterCriteria" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="includePending" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="assignUnmergedRecords" type="AssignUnmergedRecordsRequest"/>
+	<xsd:complexType name="AssignUnmergedRecordsResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+			    <xsd:sequence>
+					<xsd:element name="assignementCount" type="xsd:integer"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="assignUnmergedRecordsReturn" type="AssignUnmergedRecordsResponse"/>
+
+   <xsd:complexType name="GetAssignedRecordsRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+				    <xsd:element name="recordState" type="RecordState"/>
+					<xsd:element name="recordsToReturn" type="xsd:integer"/>
+					<xsd:element name="returnTotal" type="xsd:boolean"/>
+					<xsd:element minOccurs="0" name="disablePaging" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getAssignedRecords" type="GetAssignedRecordsRequest"/>
+	<xsd:complexType name="GetAssignedRecordsResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SearchResponseBase"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getAssignedRecordsReturn" type="GetAssignedRecordsResponse"/>
+
+	<xsd:complexType name="SearchRequestBase">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="sortCriteria" type="xsd:string"/>
+					<xsd:element name="recordsToReturn" type="xsd:integer"/>
+					<xsd:element name="returnTotal" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="SearchResponseBase">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="record" type="Record"/>
+					<xsd:element minOccurs="0" name="recordCount" type="xsd:integer"/>
+					<xsd:element minOccurs="0" name="searchToken" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="SearchQueryRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SearchRequestBase">
+				<xsd:sequence>
+					<xsd:element name="filterCriteria" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+								A parameterized condition clause. Ex. FIRST_NAME = ?
+							</xsd:documentation>
+						</xsd:annotation>
+</xsd:element>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="filterParameter" type="Parameter">
+						<xsd:annotation>
+							<xsd:documentation>
+								A list list of parameter values for binding.
+							</xsd:documentation>
+						</xsd:annotation>
+</xsd:element>
+					<xsd:element minOccurs="0" name="disablePaging" type="xsd:boolean"/>
+					<xsd:element minOccurs="0" name="uncommitedRead" type="xsd:boolean"/>
+					<xsd:element maxOccurs="3" minOccurs="0" name="recordState" type="HubState">
+						<xsd:annotation>
+							<xsd:documentation>
+								Determines which hub states to include in the search. If not specified, then all states are included.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element maxOccurs="3" minOccurs="0" name="joinUid" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+								Determines which uids to include in the search results. If not specified, then only the siperian object uid is used.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>					
+					<xsd:element default="false" minOccurs="0" name="removeDuplicates" type="xsd:boolean">
+						<xsd:annotation>
+							<xsd:documentation>
+     						Enable or disable de-duplication of the result set. Defaults to false.
+     						Enabling this option can degrade the performance of this request. It should
+     						be enabled only when there is a possibility of duplicates in the result set
+     						due to the structure of the query. E.g. - a query for a party based on attributes
+     						of its child address record could result in the same party being returned
+     						several time.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element default="false" maxOccurs="1" minOccurs="0" name="advancedMode" type="xsd:boolean">
+						<xsd:annotation>
+							<xsd:documentation>
+     						Enable or disable special mode of search query processing. Defaults to false.
+						When this mode is enabled, advanced operators in filterCriteria are supported.
+						Currently only EXISTS and COUNT can be used. Please notice, that these operators
+						do not use exact SQL syntax, but instead provide their own.
+						Valid examples:
+						COUNT(MT_ADDRESS) &gt; 0
+						COUNT(MT_ADDRESS, MATCH_PATH_COMPONENT.MT_ADDRESS|STATE_CD = 'CA') &gt; 0
+						EXISTS(MT_ADDRESS, MATCH_PATH_COMPONENT.MT_ADDRESS|STATE_CD = 'CA')
+
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element maxOccurs="1" minOccurs="0" name="effectiveDate" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="historyDate" type="xsd:dateTime"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="searchQuery" type="SearchQueryRequest"/>
+	<xsd:complexType name="SearchQueryResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SearchResponseBase"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="searchQueryReturn" type="SearchQueryResponse"/>
+	
+	<xsd:complexType name="GetSearchResultsRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="searchToken" type="xsd:string"/>
+					<xsd:element name="firstRecord" type="xsd:int"/>
+					<xsd:element name="recordsToReturn" type="xsd:int"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getSearchResults" type="GetSearchResultsRequest"/>
+	<xsd:complexType name="GetSearchResultsResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+			        <xsd:element maxOccurs="unbounded" minOccurs="0" name="record" type="Record"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getSearchResultsReturn" type="GetSearchResultsResponse"/>
+	
+	<xsd:complexType name="SearchLookupValuesRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element name="lookupField" type="LookupField"/>
+					<xsd:element name="comparisonOperator" type="ComparisonOperator"/>
+					<xsd:element name="valuesToReturn" type="xsd:integer"/>
+					<xsd:element name="returnTotal" type="xsd:boolean"/>
+					<xsd:element minOccurs="0" name="disablePaging" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="searchLookupValues" type="SearchLookupValuesRequest"/>
+	<xsd:complexType name="SearchLookupValuesResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SearchResponseBase"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="searchLookupValuesReturn" type="SearchLookupValuesResponse"/>
+
+	<xsd:complexType name="GetMatchedRecordsRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="sortCriteria" type="xsd:string"/>
+					<xsd:element name="recordsToReturn" type="xsd:integer"/>
+					<xsd:element name="returnTotal" type="xsd:boolean"/>
+					<xsd:element minOccurs="0" name="disablePaging" type="xsd:boolean"/>
+					<xsd:element maxOccurs="3" minOccurs="0" name="recordState" type="HubState"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getMatchedRecords" type="GetMatchedRecordsRequest"/>
+	<xsd:complexType name="GetMatchedRecordsResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SearchResponseBase"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getMatchedRecordsReturn" type="GetMatchedRecordsResponse"/>
+
+	<xsd:complexType name="RemoveMatchedRecordsRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="recordKeyList" type="RecordKey"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="removeMatchedRecords" type="RemoveMatchedRecordsRequest"/>
+	<xsd:complexType name="RemoveMatchedRecordsResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="removeMatchedRecordsReturn" type="RemoveMatchedRecordsResponse"/>
+
+	<xsd:complexType name="GetSiperianObjectCompatibilityRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getSiperianObjectCompatibility" type="GetSiperianObjectCompatibilityRequest"/>
+	<xsd:complexType name="GetSiperianObjectCompatibilityResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="checksum" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getSiperianObjectCompatibilityReturn" type="GetSiperianObjectCompatibilityResponse"/>
+
+    <xsd:complexType name="SearchHmQueryRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SearchRequestBase">
+				<xsd:sequence>
+					<xsd:element name="hmConfigurationUid" type="tns:SiperianObjectUid"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="relTypeUid" type="tns:SiperianObjectUid"/>
+					<xsd:element name="filterCriteria" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="aggregateCriteria" type="xsd:string"/>
+					<xsd:element minOccurs="0" name="disablePaging" type="xsd:boolean"/>
+					<xsd:element maxOccurs="3" minOccurs="0" name="recordState" type="HubState">
+						<xsd:annotation>
+							<xsd:documentation>
+								Determines which hub states to include in the search. If not specified, then all states are included.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element maxOccurs="1" minOccurs="0" name="effectiveDate" type="xsd:dateTime"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="historyDate" type="xsd:dateTime"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="searchHmQuery" type="SearchHmQueryRequest"/>
+	<xsd:complexType name="SearchHmQueryResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SearchResponseBase"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="searchHmQueryReturn" type="SearchHmQueryResponse"/>
+
+    <xsd:complexType name="RelationshipRequestBase">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element name="hmConfigurationUid" type="xsd:string"/>
+					<xsd:element name="recordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="lastUpdateDate" type="xsd:dateTime"/>
+					<xsd:element name="relTypeUid" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+    <xsd:complexType name="AddRelationshipRequest">
+		<xsd:complexContent>
+			<xsd:extension base="RelationshipRequestBase">
+				<xsd:sequence>
+					<xsd:element name="hierarchyUid" type="xsd:string"/>
+					<xsd:element name="bo1RecordKey" type="RecordKey"/>
+					<xsd:element name="bo2RecordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="startDate" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="endDate" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="record" type="Record"/>
+					<xsd:element default="false" name="generateSourceKey" type="xsd:boolean"/>
+					<xsd:element default="false" name="pending" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="addRelationship" type="AddRelationshipRequest"/>
+	<xsd:complexType name="AddRelationshipResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="addRelationshipReturn" type="AddRelationshipResponse"/>
+	
+	<xsd:complexType name="UpdateRelationshipRequest">
+		<xsd:complexContent>
+			<xsd:extension base="RelationshipRequestBase">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="0" name="hierarchyUid" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="newRelTypeUid" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="bo1RecordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="bo2RecordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="startDate" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="endDate" type="xsd:dateTime"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="record" type="Record"/>					
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="updateRelationship" type="UpdateRelationshipRequest"/>
+	<xsd:complexType name="UpdateRelationshipResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="updateRelationshipReturn" type="UpdateRelationshipResponse"/>
+
+	<xsd:complexType name="DeleteRelationshipRequest">
+		<xsd:complexContent>
+			<xsd:extension base="RelationshipRequestBase">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="0" name="deleteAsSMOS" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="deleteRelationship" type="DeleteRelationshipRequest"/>
+	<xsd:complexType name="DeleteRelationshipResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="deleteRelationshipReturn" type="DeleteRelationshipResponse"/>
+	
+	<xsd:complexType name="GetOneHopRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element name="hmConfigurationUid" type="xsd:string"/>
+					<xsd:element name="recordsToReturn" type="xsd:integer"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="entityKeys" type="SiperianObjectRecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="oneHopFilter" type="OneHopFilter"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="filterCriteria" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="entityLabelFilter" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="sortCriteria" type="xsd:string"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="entityFilterCriteria" type="EntityFilterCriteria"/>
+					<xsd:element minOccurs="0" name="disablePaging" type="xsd:boolean"/>
+					<xsd:element maxOccurs="3" minOccurs="0" name="recordState" type="HubState">
+						<xsd:annotation>
+							<xsd:documentation>
+								Determines which hub states to include in the search. If not specified, then all states are included.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element maxOccurs="1" minOccurs="0" name="effectiveDate" type="xsd:dateTime"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getOneHop" type="GetOneHopRequest"/>
+	<xsd:complexType name="GetOneHopResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="records" type="HMRecord"/>
+						<xsd:element minOccurs="0" name="recordCount" type="xsd:integer"/>
+						<xsd:element name="searchToken" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getOneHopReturn" type="GetOneHopResponse"/>
+	
+	<xsd:complexType name="GetEntityGraphRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element name="hmConfigurationUid" type="xsd:string"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="entityKeys" type="SiperianObjectRecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="entityGraphFilter" type="EntityGraphFilter"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="entityFilterCriteria" type="EntityFilterCriteria"/>
+					<xsd:element maxOccurs="3" minOccurs="0" name="recordState" type="HubState">
+						<xsd:annotation>
+							<xsd:documentation>
+								Determines which hub states to include in the search. If not specified, then all states are included.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="effectiveDate" type="xsd:dateTime"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getEntityGraph" type="GetEntityGraphRequest"/>
+	<xsd:complexType name="GetEntityGraphResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+				    <xsd:element maxOccurs="unbounded" minOccurs="0" name="entityInfos" type="EntityInfo"/>
+				    <xsd:element maxOccurs="unbounded" minOccurs="0" name="records" type="HMRecord"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getEntityGraphReturn" type="GetEntityGraphResponse"/>
+	
+	<xsd:complexType name="RegisterUsersRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="users" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="registerUsers" type="RegisterUsersRequest"/>
+	<xsd:complexType name="RegisterUsersResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="registerUsersReturn" type="RegisterUsersResponse"/>
+	
+	<xsd:complexType name="UnregisterUsersRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="users" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="unregisterUsers" type="UnregisterUsersRequest"/>
+	<xsd:complexType name="UnregisterUsersResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="unregisterUsersReturn" type="UnregisterUsersResponse"/>
+
+    <xsd:complexType name="ExecuteBatchGroupRequest">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianRequest">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="batchGroupUid" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="resume" type="xsd:boolean"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchGroup" type="ExecuteBatchGroupRequest"/>
+    <xsd:complexType name="ExecuteBatchGroupResponse">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianResponse">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="rowidBatchGroupLog" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="executeBatchGroupReturn" type="ExecuteBatchGroupResponse"/>
+    
+    <xsd:complexType name="ResetBatchGroupRequest">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianRequest">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="batchGroupUid" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="resetBatchGroup" type="ResetBatchGroupRequest"/>
+    <xsd:complexType name="ResetBatchGroupResponse">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianResponse">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="rowidBatchGroupLog" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="resetBatchGroupReturn" type="ResetBatchGroupResponse"/>    
+    <xsd:complexType name="GetBatchGroupStatusRequest">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianRequest">
+                <xsd:sequence>
+                    <xsd:choice>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="rowidBatchGroupLog" type="xsd:string"/>
+                        <xsd:element maxOccurs="1" minOccurs="0" name="batchGroupUid" type="xsd:string"/>
+                    </xsd:choice>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getBatchGroupStatus" type="GetBatchGroupStatusRequest"/>
+    <xsd:complexType name="GetBatchGroupStatusResponse">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianResponse">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="rowidBatchGroupLog" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="batchGroupUid" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="startRunDate" type="xsd:dateTime"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="endRunDate" type="xsd:dateTime"/>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="runStatus" type="xsd:integer"/>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="statusMessage" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getBatchGroupStatusReturn" type="GetBatchGroupStatusResponse"/>
+
+	<xsd:complexType name="LinkRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="recordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="1" name="groupRecordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="matchRuleUid" type="xsd:string"/>
+					<xsd:element default="false" name="autoMerge" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="link" type="LinkRequest"/>
+	<xsd:complexType name="LinkResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="linkReturn" type="LinkResponse"/>
+
+	<xsd:complexType name="UnlinkRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="recordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="1" name="groupRecordKey" type="RecordKey"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="unlink" type="UnlinkRequest"/>
+	<xsd:complexType name="UnlinkResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="unlinkReturn" type="UnlinkResponse"/>
+	
+	<xsd:complexType name="Link2Request">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="recordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="groupReason" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="link2" type="Link2Request"/>
+	<xsd:complexType name="Link2Response">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="1" name="groupId" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="link2Return" type="Link2Response"/>
+
+	<xsd:complexType name="Unlink2Request">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="recordKey" type="RecordKey"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="unlink2" type="Unlink2Request"/>
+	<xsd:complexType name="Unlink2Response">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="unlink2Return" type="Unlink2Response"/>
+	
+	<xsd:complexType name="MultiMergeRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+				    <xsd:element maxOccurs="1" minOccurs="1" name="record" type="Record"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="recordKeyList" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="matchRuleUid" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="taskId" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="multiMerge" type="MultiMergeRequest"/>
+	<xsd:complexType name="MultiMergeResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="multiMergeReturn" type="MultiMergeResponse"/>
+
+	<xsd:complexType name="FlagForAutomergeRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="unmergedRecordKey" type="RecordKey"/>
+					<xsd:element name="matchedRecordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="matchRuleUid" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="flagForAutomerge" type="FlagForAutomergeRequest"/>
+	<xsd:complexType name="FlagForAutomergeResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="flagForAutomergeReturn" type="FlagForAutomergeResponse"/>
+
+    <xsd:complexType name="UpdateMatchRecordRequest">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianObjectRequest">
+                <xsd:sequence>
+                    <xsd:element name="recordKey" type="RecordKey"/>
+                    <xsd:element name="matchedRecordKey" type="RecordKey"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="matchRuleUid" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="taskId" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="automerge" type="xsd:boolean"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="matchReverse" type="xsd:boolean"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="updateMatchRecord" type="UpdateMatchRecordRequest"/>
+    <xsd:complexType name="UpdateMatchRecordResponse">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianResponse"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="updateMatchRecordReturn" type="UpdateMatchRecordResponse"/>
+
+	<xsd:complexType name="GetBvtRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="includePending" type="xsd:boolean"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="effectiveDate" type="xsd:dateTime"/>
+        			<xsd:element maxOccurs="1" minOccurs="0" name="historyDate" type="xsd:dateTime"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getBvt" type="GetBvtRequest"/>
+
+	<xsd:complexType name="GetBvtResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="record" type="Record"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getBvtReturn" type="GetBvtResponse"/>
+
+	<xsd:complexType name="PreviewBvtRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="recordKeyList" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="filterClause" type="xsd:string"/>
+					 <xsd:element maxOccurs="1" minOccurs="0" name="effectiveDate" type="xsd:dateTime"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="historyDate" type="xsd:dateTime"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="previewBvt" type="PreviewBvtRequest"/>
+
+	<xsd:complexType name="PreviewBvtResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element name="recordKey" type="RecordKey"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="record" type="Record"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="aggregatePeriodStartDate" type="xsd:dateTime"/>
+			        <xsd:element maxOccurs="1" minOccurs="0" name="aggregatePeriodEndDate" type="xsd:dateTime"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="previewBvtReturn" type="PreviewBvtResponse"/>
+
+    <xsd:simpleType name="ValidationCheckType">
+      <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="SYSTEM"/>
+        <xsd:enumeration value="PHYSICAL"/>
+        <xsd:enumeration value="REPOSITORY"/>
+        <xsd:enumeration value="REPOSITORY_MAPPINGS"/>
+        <xsd:enumeration value="REPOSITORY_CLEANSE"/>
+        <xsd:enumeration value="REPOSITORY_QUERIES"/>
+        <xsd:enumeration value="REPOSITORY_SCHEMA"/>
+        <xsd:enumeration value="REPOSITORY_TRUST"/>
+        <xsd:enumeration value="REPOSITORY_SECURITY_ACCESS_MANAGER"/>
+        <xsd:enumeration value="REPOSITORY_HIERARCHY_MANAGER"/>
+        <xsd:enumeration value="REPOSITORY_MISCELLANEOUS"/>
+      </xsd:restriction>
+    </xsd:simpleType> 
+    <xsd:complexType name="ValidationMessage">
+		<xsd:sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="errorId" type="xsd:string"/>
+			<xsd:element name="level" type="ValidationMessageLevel"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="text" type="xsd:string"/>
+		</xsd:sequence>
+    </xsd:complexType> 
+	<xsd:complexType name="ValidateMetadataRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="check" type="ValidationCheckType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="validateMetadata" type="ValidateMetadataRequest"/>
+	<xsd:complexType name="ValidateMetadataResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="error" type="ValidationMessage"/>					
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="validateMetadataReturn" type="ValidateMetadataResponse"/>
+
+    <xsd:simpleType name="ValidationStatusType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="UNKNOWN"/>
+            <xsd:enumeration value="INVALID"/>
+            <xsd:enumeration value="VALID_WITH_WARNING"/>
+            <xsd:enumeration value="VALID"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="ValidationResultType">
+        <xsd:sequence>
+            <xsd:element name="validationDate" type="xsd:dateTime">
+            </xsd:element>
+            <xsd:element name="validationDuration" type="xsd:int">
+            </xsd:element>
+            <xsd:element name="partialValidation" type="xsd:boolean">
+            </xsd:element>
+            <xsd:element name="fatalErrorsNo" type="xsd:int"/>
+            <xsd:element name="criticalErrorsNo" type="xsd:int"/>
+            <xsd:element name="errorsNo" type="xsd:int"/>
+            <xsd:element name="warningsNo" type="xsd:int"/>
+            <xsd:element name="infosNo" type="xsd:int"/>
+            <xsd:element maxOccurs="unbounded" minOccurs="0" name="error" type="ValidationMessage"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="GetValidationStatusRequest">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianRequest"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getValidationStatus" type="GetValidationStatusRequest"/>
+    <xsd:complexType name="GetValidationStatusResponse">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianResponse">
+                <xsd:sequence>
+                	<xsd:element name="validationStatus" type="ValidationStatusType">
+                	</xsd:element>
+                	<xsd:element maxOccurs="1" minOccurs="0" name="lastValidationResult" type="ValidationResultType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getValidationStatusReturn" type="GetValidationStatusResponse"/>
+
+
+    <xsd:complexType name="ChangeListMessage">
+		<xsd:sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="changeId" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="errorId" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="text" type="xsd:string"/>
+		</xsd:sequence>
+    </xsd:complexType> 
+	<xsd:complexType name="ApplyChangeListRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+                    <xsd:element name="rollbackStrategy" type="RollbackStrategy"/>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="changeListXml" type="xsd:string"/>                
+					<xsd:element maxOccurs="1" minOccurs="0" name="ownerPassword" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="validateDataIntegrity" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="applyChangeList" type="ApplyChangeListRequest"/>
+	<xsd:complexType name="ApplyChangeListResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="1" name="success" type="xsd:boolean"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="error" type="ChangeListMessage"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="dataLost" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="applyChangeListReturn" type="ApplyChangeListResponse"/>
+
+	<xsd:complexType name="CreateChangeListRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="sourceRepositoryId" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="sourceRepositoryXml" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="createChangeList" type="CreateChangeListRequest"/>
+	<xsd:complexType name="CreateChangeListResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+                    <xsd:element name="changeListXml" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="createChangeListReturn" type="CreateChangeListResponse"/>
+
+	<xsd:complexType name="GetOrsMetadataRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getOrsMetadata" type="GetOrsMetadataRequest"/>
+	<xsd:complexType name="GetOrsMetadataResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+                    <xsd:element name="repositoryXml" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getOrsMetadataReturn" type="GetOrsMetadataResponse"/>
+
+	<xsd:complexType name="ValidateChangeListRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="changeListXml" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="ownerPassword" type="xsd:string"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="validateDataIntegrity" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="validateChangeList" type="ValidateChangeListRequest"/>
+	<xsd:complexType name="ValidateChangeListResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="success" type="xsd:boolean"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="error" type="ChangeListMessage"/>					
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="validateChangeListReturn" type="ValidateChangeListResponse"/>
+
+	<xsd:complexType name="PromotePendingXrefsRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+		        	<xsd:choice maxOccurs="1" minOccurs="1">
+						<xsd:element maxOccurs="unbounded" minOccurs="1" name="xrefKey" type="XrefKey"/>
+						<xsd:element minOccurs="1" name="recordKey" type="RecordKey"/>
+					</xsd:choice>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="columnName" type="tns:SiperianObjectUid"/>
+					<xsd:element minOccurs="1" name="flagForPromote" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="promotePendingXrefs" type="PromotePendingXrefsRequest"/>
+	<xsd:complexType name="PromotePendingXrefsResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="promoteResult" type="XrefResult"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="promotePendingXrefsReturn" type="PromotePendingXrefsResponse"/>
+
+	<xsd:complexType name="DeleteRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="recordKey" type="RecordKey"/>
+					<xsd:element minOccurs="1" name="deleteBORecord" type="xsd:boolean"/>
+					<xsd:element maxOccurs="1" minOccurs="0" name="deleteAsSMOS" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="delete" type="DeleteRequest"/>
+	<xsd:complexType name="DeleteResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="deleteResult" type="RecordResult"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="deleteReturn" type="DeleteResponse"/>
+
+	<xsd:complexType name="RestoreRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianObjectRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="xrefKey" type="XrefKey"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="restore" type="RestoreRequest"/>
+	<xsd:complexType name="RestoreResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="restoreResult" type="XrefResult"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="restoreReturn" type="RestoreResponse"/>
+	<xsd:simpleType name="RollbackStrategy">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="FULL_ROLLBACK"/>
+			<xsd:enumeration value="ROLLBACK_TO_LAST_CHANGE"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ValidationMessageLevel">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="FATAL"/>
+			<xsd:enumeration value="CRITICAL"/>
+			<xsd:enumeration value="ERROR"/>
+			<xsd:enumeration value="WARNING"/>
+			<xsd:enumeration value="INFORMATIONAL"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="SyncCustomResourcesRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="1" name="customResourceSetName" type="xsd:string"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="customResourceName" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="syncCustomResources" type="SyncCustomResourcesRequest"/>
+	<xsd:complexType name="SyncCustomResourcesResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="addedCustomResource" type="tns:SiperianObjectUid"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="deletedCustomResource" type="tns:SiperianObjectUid"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="unchangedCustomResource" type="tns:SiperianObjectUid"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="syncCustomResourcesReturn" type="SyncCustomResourcesResponse"/>
+
+	<xsd:complexType name="GetResourcePrivilegesRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+		        	<xsd:choice maxOccurs="1" minOccurs="0">
+						<xsd:element maxOccurs="1" minOccurs="0" name="userNameForPrivileges" type="xsd:string"/>
+						<xsd:element maxOccurs="1" minOccurs="0" name="roleNameForPrivileges" type="xsd:string"/>
+					</xsd:choice>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="resourceUid" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getResourcePrivileges" type="GetResourcePrivilegesRequest"/>
+	<xsd:complexType name="ResourcePrivilege">
+		<xsd:sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="resourceUid" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="resourceFound" type="xsd:boolean"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="resourceGroup" type="xsd:boolean"/>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="privilege" type="mdns:PrivilegeType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GetResourcePrivilegesResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="resourcePrivilege" type="ResourcePrivilege"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getResourcePrivilegesReturn" type="GetResourcePrivilegesResponse"/>
+
+
+	<xsd:complexType name="TaskMetaDataType">
+        <xsd:annotation>
+       		<xsd:documentation>This is a single TaskMetaData object.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element maxOccurs="1" minOccurs="0" name="workflowProcessId" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="taskId" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="taskType" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="ownerUid" type="xsd:string"/>
+            <xsd:element maxOccurs="1" minOccurs="0" name="previousTaskId" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="previousOwnerUid" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="dueDate" type="xsd:dateTime"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="status" type="TaskStatusType"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="priority" type="TaskPriorityType"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="subjectAreaUid" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="title" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="interactionId" type="tns:InteractionId"/>
+            <xsd:element minOccurs="0" name="creator" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="createDate" type="xsd:date"/>
+            <xsd:element minOccurs="0" name="lastUpdatedBy" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="lastUpdateDate" type="xsd:date"/>
+        </xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="TaskDataType">
+		<xsd:complexContent>
+			<xsd:extension base="TaskMetaDataType">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="0" name="comment" type="xsd:string"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="taskRecord" type="TaskRecordType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="TaskRecordType">
+		<xsd:sequence>
+			<xsd:element maxOccurs="1" minOccurs="1" name="siperianObjectUid" type="tns:SiperianObjectUid"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="recordKey" type="RecordKey"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="matchRuleUid" type="tns:SiperianObjectUid"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:simpleType name="TaskStatusType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="OPEN"/>
+			<xsd:enumeration value="CLOSED"/>
+			<xsd:enumeration value="OBSOLETE"/>
+            <xsd:enumeration value="ANY"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="TaskPriorityType">
+		<xsd:restriction base="xsd:integer">
+			<xsd:enumeration value="0"/>
+			<xsd:enumeration value="1"/>
+			<xsd:enumeration value="-1"/>
+            <xsd:enumeration value="100"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+    <xsd:simpleType name="TaskPositionType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="USER"/>
+            <xsd:enumeration value="WORKFLOW"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+	<xsd:complexType name="TaskValidationResult">
+        <xsd:annotation>
+       		<xsd:documentation>This is a single TaskValidationResult object.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element maxOccurs="1" minOccurs="0" name="taskId" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="isValid" type="xsd:boolean"/>
+			<xsd:element maxOccurs="1" minOccurs="0" name="errorCode" nillable="true" type="xsd:string"/>			
+			<xsd:element maxOccurs="1" minOccurs="0" name="errorMessage" nillable="true" type="xsd:string"/>			
+		</xsd:sequence>
+	</xsd:complexType>	
+
+	<xsd:complexType name="CreateTaskRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="1" name="taskData" type="TaskDataType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="createTask" type="CreateTaskRequest"/>
+	<xsd:complexType name="CreateTaskResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+				        <xsd:element maxOccurs="1" minOccurs="0" name="taskId" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="createTaskReturn" type="CreateTaskResponse"/>
+
+	<xsd:complexType name="UpdateTaskRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="1" minOccurs="1" name="taskData" type="TaskDataType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="updateTask" type="UpdateTaskRequest"/>
+	<xsd:complexType name="UpdateTaskResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="updateTaskReturn" type="UpdateTaskResponse"/>
+
+	<xsd:complexType name="GetTasksRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+                <xsd:sequence>
+				    <xsd:element maxOccurs="unbounded" minOccurs="0" name="taskMetaData" type="TaskMetaDataType"/>
+				    <xsd:element maxOccurs="1" minOccurs="0" name="overdueOnly" type="xsd:boolean"/>
+				    <xsd:element maxOccurs="1" minOccurs="0" name="summaryOnly" type="xsd:boolean"/>
+				    <xsd:element maxOccurs="1" minOccurs="0" name="unassigned" type="xsd:boolean"/>
+				    <xsd:element maxOccurs="1" minOccurs="0" name="canBeAssignedToUser" type="xsd:boolean"/>
+				    <xsd:element maxOccurs="1" minOccurs="0" name="dsiName" type="xsd:string"/>
+				    <xsd:element maxOccurs="1" minOccurs="0" name="disablePaging" type="xsd:boolean"/>
+				    <xsd:element maxOccurs="1" minOccurs="0" name="searchToken" type="xsd:string"/>
+				    <xsd:element maxOccurs="1" minOccurs="0" name="firstRecord" type="xsd:int"/>
+				    <xsd:element maxOccurs="1" minOccurs="0" name="recordsToReturn" type="xsd:int"/>
+				    <xsd:element maxOccurs="1" minOccurs="0" name="sortCriteria" type="xsd:string"/>
+				    <xsd:element maxOccurs="1" minOccurs="0" name="returnTotal" type="xsd:boolean"/>
+                </xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getTasks" type="GetTasksRequest"/>
+	<xsd:complexType name="GetTasksResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+		        	<xsd:choice maxOccurs="1" minOccurs="0">
+					    <xsd:element maxOccurs="unbounded" minOccurs="0" name="taskMetaData" type="TaskMetaDataType"/>
+					    <xsd:element maxOccurs="unbounded" minOccurs="0" name="taskData" type="TaskDataType"/>
+		        	</xsd:choice>
+				  <xsd:element name="searchToken" type="xsd:string"/>
+				  <xsd:element name="recordCount" type="xsd:int"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="getTasksReturn" type="GetTasksResponse"/>
+
+    <xsd:complexType name="GetTaskLineageRequest">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianRequest">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="taskMetaData" type="TaskMetaDataType"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="dsiName" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="taskId" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="ownerUid" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="creatorUid" type="xsd:string"/>
+                    <xsd:element default="ANY" minOccurs="0" name="workflowStatus" type="TaskStatusType"/>
+                    <xsd:element default="USER" minOccurs="0" name="taskPosition" type="TaskPositionType"/>
+                    <xsd:element minOccurs="0" name="sortCriteria" type="xsd:string"/>
+                    <xsd:element default="false" minOccurs="0" name="disablePaging" type="xsd:boolean"/>
+                    <xsd:element minOccurs="0" name="searchToken" type="xsd:string"/>
+                    <xsd:element default="1" minOccurs="0" name="firstRecord" type="xsd:int"/>
+                    <xsd:element default="0" minOccurs="0" name="recordsToReturn" type="xsd:int"/>
+                    <xsd:element default="true" minOccurs="0" name="returnTotal" type="xsd:boolean"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getTaskLineage" type="GetTaskLineageRequest"/>
+    <xsd:complexType name="GetTaskLineageResponse">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianResponse">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="taskMetaData" type="TaskMetaDataType"/>
+                    <xsd:element name="searchToken" type="xsd:string"/>
+                    <xsd:element name="recordCount" type="xsd:int"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getTaskLineageReturn" type="GetTaskLineageResponse"/>   
+
+	<xsd:complexType name="ValidateTasksRequest">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianRequest">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="1" name="task" type="TaskMetaDataType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="validateTasks" type="ValidateTasksRequest"/>
+	<xsd:complexType name="ValidateTasksResponse">
+		<xsd:complexContent>
+			<xsd:extension base="SiperianResponse">
+				<xsd:sequence>
+			        <xsd:element maxOccurs="unbounded" minOccurs="0" name="taskValidationResult" type="TaskValidationResult"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:element ibmSchExtn:docRoot="true" name="validateTasksReturn" type="ValidateTasksResponse"/>	
+
+    <xsd:complexType name="AssignableTaskInfo">
+        <xsd:annotation>
+            <xsd:documentation>This is a single task type and subject area uid to identify a specific type of task to check for assignability.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element maxOccurs="1" minOccurs="1" name="taskType" type="xsd:string"/>
+            <xsd:element maxOccurs="1" minOccurs="1" name="subjectAreaUid" type="xsd:string"/>         
+        </xsd:sequence>
+    </xsd:complexType>   
+
+    <xsd:complexType name="GetAssignableUsersForTasksRequest">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianRequest">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="1" name="assignableTaskInfo" type="AssignableTaskInfo"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getAssignableUsersForTasks" type="GetAssignableUsersForTasksRequest"/>
+    <xsd:complexType name="GetAssignableUsersForTasksResponse">
+        <xsd:complexContent>
+            <xsd:extension base="SiperianResponse">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="userUid" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element ibmSchExtn:docRoot="true" name="getAssignableUsersForTasksReturn" type="GetAssignableUsersForTasksResponse"/>
+
+
+    <xsd:complexType name="JoinObjectType">
+    	<xsd:sequence>
+    		<xsd:element name="siperianObjectUid" type="xsd:string"/>
+    		<xsd:element maxOccurs="unbounded" minOccurs="0" name="filterField" type="Field"/>
+    	</xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

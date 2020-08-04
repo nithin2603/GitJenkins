@@ -1,0 +1,6 @@
+
+DECLARE sip NAMESPACE 'urn:siperian.api';
+DECLARE mdm NAMESPACE 'http://www.wkglobal.com/SearchMDM';
+DECLARE ns NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+DECLARE NS1 NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+DECLARE NS2 NAMESPACE 'java.io';

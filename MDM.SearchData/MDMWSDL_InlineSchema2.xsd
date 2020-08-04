@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+    project:   Informatica MDM
+    copyright: Informatica LLC. (c) 2003-2013.  All rights reserved.
+
+		--><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:metadata.siperian.api" xmlns="urn:metadata.siperian.api" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:mdns="urn:metadata.siperian.api" xmlns:ns="urn:siperian.api" xmlns:rns="urn:siperian.api" xmlns:tns="urn:types.siperian.api" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<xsd:import namespace="urn:types.siperian.api" schemaLocation="MDMWSDL_InlineSchema1.xsd"/>
+
+    <xsd:simpleType name="PrivilegeType">
+                <xsd:annotation>
+                        <xsd:documentation>This is an enumeration of the available privilege types</xsd:documentation>
+                </xsd:annotation>
+                <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="READ"/>
+                  <xsd:enumeration value="CREATE"/>
+                  <xsd:enumeration value="UPDATE"/>
+                  <xsd:enumeration value="DELETE"/>
+                  <xsd:enumeration value="MERGE"/>
+                  <xsd:enumeration value="EXECUTE"/>                  
+                  <xsd:enumeration value="NONE"/>
+                </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="MetaDataRequestObjectTypes">
+		<xsd:annotation>
+			<xsd:documentation>This is an enumeration of the available object type names.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+		  <xsd:enumeration value="BASE_OBJECT"/>
+		  <xsd:enumeration value="DEPENDENT_OBJECT"/>
+		  <xsd:enumeration value="PACKAGE"/>
+		  <xsd:enumeration value="REMOTE_PACKAGE"/>
+		  <xsd:enumeration value="SYSTEM"/>
+		  <xsd:enumeration value="ROLE"/>		  
+		  <xsd:enumeration value="MAPPING"/>
+		  <xsd:enumeration value="CLEANSE_FUNCTION"/>
+		  <xsd:enumeration value="QUERY_GROUP"/>
+		  <xsd:enumeration value="QUERY"/>
+		  <xsd:enumeration value="RELATIONSHIP"/>
+		  <xsd:enumeration value="MATCH_RULE_SET"/>
+		  <xsd:enumeration value="MATCH_COLUMN"/>
+		  <xsd:enumeration value="MATCH_PATH_COMPONENT"/>
+		  <xsd:enumeration value="USER"/>
+		  <xsd:enumeration value="BATCH_GROUP"/>
+		  <xsd:enumeration value="SUBJECT_AREA"/>
+		  <xsd:enumeration value="TASK_ASSIGNMENT_CONF"/>
+		  <xsd:enumeration value="HM_PROFILE"/>
+		  <xsd:enumeration value="HM_SANDBOX"/>
+		  <xsd:enumeration value="HM_CONFIGURATION"/>
+		  <xsd:enumeration value="WORKFLOW_ENGINE"/>
+		</xsd:restriction>
+    </xsd:simpleType>
+
+	<xsd:complexType name="MetaDataResponseObject">
+        <xsd:annotation>
+        	<xsd:documentation>This identifies which object is in a DescribeDataObject API response.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice>
+			<xsd:element name="metaDataBaseObject" type="MetaDataBaseObject"/>
+			<xsd:element name="metaDataDependentObject" type="MetaDataDependentObject"/>
+			<xsd:element name="metaDataPackage" type="MetaDataPackage"/>
+			<xsd:element name="metaDataRemotePackage" type="MetaDataRemotePackage"/>
+			<xsd:element name="metaDataSystem" type="MetaDataSystem"/>
+			<xsd:element name="metaDataRole" type="MetaDataRole"/>
+			<xsd:element name="metaDataMapping" type="MetaDataMapping"/>
+			<xsd:element name="metaDataCleanseFunction" type="MetaDataCleanseFunction"/>
+			<xsd:element name="metaDataQueryGroup" type="MetaDataQueryGroup"/>
+			<xsd:element name="metaDataQuery" type="MetaDataQuery"/>
+			<xsd:element name="metaDataMatchRuleSet" type="MetaDataMatchRuleSet"/>
+			<xsd:element name="metaDataMatchRule" type="MetaDataMatchRule"/>
+			<xsd:element name="metaDataMatchColumn" type="MetaDataMatchColumn"/>
+			<xsd:element name="metaDataWorkflowEngine" type="MetaDataWorkflowEngine"/>
+		</xsd:choice>
+	</xsd:complexType>
+
+	<xsd:complexType name="MetaDataColumnResponseObject">
+        <xsd:annotation>
+        	<xsd:documentation>This identifies which column object is in a DescribeDataObject API response.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice>
+			<xsd:element name="metaDataTableColumn" type="MetaDataTableColumn"/>
+			<xsd:element name="metaDataQueryFunctionColumn" type="MetaDataQueryFunctionColumn"/>
+			<xsd:element name="metaDataQueryConstantColumn" type="MetaDataQueryConstantColumn"/>
+		</xsd:choice>
+	</xsd:complexType>
+
+    <xsd:complexType name="MetaDataListResponseObject">
+        <xsd:annotation>
+            <xsd:documentation>This identifies which object is in a DescribeDataObject API response.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice>
+            <xsd:element name="metaDataBase" type="MetaDataBase"/>
+            <xsd:element name="metaDataTableColumn" type="MetaDataTableColumn"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="MetaDataBase">
+        <xsd:annotation>
+        	<xsd:documentation>This is the base meta-data object extended by all other meta-data.</xsd:documentation>
+        </xsd:annotation>
+      <xsd:sequence>
+        <xsd:element name="uid" nillable="false" type="xsd:string"/>
+        <xsd:element name="name" nillable="false" type="xsd:string"/>
+        <xsd:element name="displayName" nillable="false" type="xsd:string"/>
+        <xsd:element name="primaryKey" nillable="true" type="xsd:string"/>
+        <xsd:element name="description" nillable="true" type="xsd:string"/>
+        <xsd:element maxOccurs="unbounded" minOccurs="0" name="privilege" type="PrivilegeType"/>
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataColumnBase">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a column.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+					<xsd:element name="dataType" nillable="false" type="xsd:string"/>
+					<xsd:element name="sequence" nillable="false" type="xsd:integer"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataTableColumn">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a table column.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataColumnBase">
+				<xsd:sequence>
+					<xsd:element name="dataDefault" nillable="true" type="xsd:string"/>
+					<xsd:element name="dataLength" nillable="true" type="xsd:integer"/>
+					<xsd:element name="dataPrecision" nillable="true" type="xsd:integer"/>
+					<xsd:element name="dataScale" nillable="true" type="xsd:integer"/>
+					<xsd:element default="true" name="visible" type="xsd:boolean"/>
+					<xsd:element name="displayLength" nillable="true" type="xsd:integer"/>
+					<xsd:element default="true" name="nullable" type="xsd:boolean"/>
+					<xsd:element name="lookupUid" nillable="true" type="xsd:string"/>
+					<xsd:element default="false" name="unique" type="xsd:boolean"/>
+        			<xsd:element name="parentColumnUid" nillable="true" type="xsd:string"/>
+					<xsd:element default="false" name="keyCol" type="xsd:boolean"/>
+					<xsd:element default="false" name="readOnly" type="xsd:boolean"/>
+					<xsd:element default="false" name="systemColumn" type="xsd:boolean"/>
+					<xsd:element default="false" name="trustEnabled" type="xsd:boolean"/>
+					<xsd:element default="false" name="validationEnabled" type="xsd:boolean"/>
+					<xsd:element default="false" name="GBID" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataQueryFunctionColumn">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a query function column.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataColumnBase">
+				<xsd:sequence>
+					<xsd:element name="functionName" nillable="true" type="xsd:string"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="parameter" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataQueryConstantColumn">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a query function column.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataColumnBase">
+				<xsd:sequence>
+					<xsd:element name="value" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataTable">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a table.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+					<xsd:element default="true" name="visible" type="xsd:boolean"/>
+        			<xsd:element name="parentUid" nillable="true" type="xsd:string"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="metaDataTableColumn" type="MetaDataTableColumn"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataBaseObject">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a base object.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataTable">
+				<xsd:sequence>
+					<xsd:element default="false" name="historyEnabled" type="xsd:boolean"/>
+					<xsd:element default="false" name="trustEnabled" type="xsd:boolean"/>
+					<xsd:element default="false" name="lookupIndicator" type="xsd:boolean"/>
+					<xsd:element default="false" name="stateManagementEnabled" type="xsd:boolean"/>
+					<xsd:element name="versioningEnabled" type="xsd:boolean"/>
+                    <xsd:element name="nonContiguousInd" type="xsd:integer"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataDependentObject">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a dependent object.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataTable"/>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataPackage">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a package.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataTable">
+				<xsd:sequence>
+					<xsd:element default="false" name="putEnabled" type="xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataRemotePackage">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a remote package.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataTable"/>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataSystem">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a system.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase"/>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataRole">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a role.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+					<xsd:element default="false" name="merge" type="xsd:boolean"/>
+					<xsd:element default="false" name="write" type="xsd:boolean"/>
+					<xsd:element default="false" name="read" type="xsd:boolean"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="metaDataPackage" type="MetaDataPackage"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="metaDataRemotePackage" type="MetaDataRemotePackage"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataParameter">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a parameter to a cleanse function or mapping.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+					<xsd:element name="dataType" nillable="false" type="xsd:string"/>
+					<xsd:element name="sequence" nillable="false" type="xsd:integer"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataMapping">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a mapping.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="metaDataInputParameter" type="MetaDataParameter"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataCleanseFunction">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a cleanse function.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+        			<xsd:element name="libraryUid" nillable="false" type="xsd:string"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="metaDataInputParameter" type="MetaDataParameter"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="metaDataOutputParameter" type="MetaDataParameter"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataQuery">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a query.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+			        <xsd:element name="diagramState" nillable="false" type="xsd:string"/>
+        			<xsd:element name="primaryTableUid" nillable="false" type="xsd:string"/>
+        			<xsd:element name="queryGroupUid" nillable="false" type="xsd:string"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="metaDataColumn" type="MetaDataColumnResponseObject"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataQueryGroup">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a query group.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="metaDataQuery" type="MetaDataQuery"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataMatchPathComponent">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a match path component.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+				<xsd:element name="parentTableUid" nillable="false" type="xsd:string"/>
+				<xsd:element name="childTableUid" nillable="false" type="xsd:string"/>
+				<xsd:element name="parentComponentUid" nillable="true" type="xsd:string"/>
+				<xsd:element name="constraintUid" nillable="false" type="xsd:string"/>
+				<xsd:element name="owningTableUid" nillable="false" type="xsd:string"/>
+				<xsd:element default="false" name="checkMissingChild" type="xsd:boolean"/>
+				<xsd:element maxOccurs="unbounded" minOccurs="0" name="matchPathComponentFilter" type="MetaDataMatchPathComponentFilter"/>				
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>   
+    <xsd:complexType name="MetaDataMatchPathComponentFilter">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a match path component filter.</xsd:documentation>
+        </xsd:annotation>		
+	<xsd:sequence>
+	<xsd:element name="columnUid" nillable="false" type="xsd:string"/>
+	<xsd:element name="value" nillable="false" type="xsd:string"/>	
+	<xsd:element default="false" name="notInIndicator" type="xsd:boolean"/>	
+	</xsd:sequence>			
+    </xsd:complexType>    
+    <xsd:complexType name="MetaDataMatchRule">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a match rule.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+					<xsd:element default="false" name="autoMerge" type="xsd:boolean"/>
+					<xsd:element default="false" name="exactMatch" type="xsd:boolean"/>
+        			<xsd:element name="exactRuleUidMatchPackage" nillable="false" type="xsd:string"/>
+			        <xsd:element name="matchLevel" nillable="false" type="xsd:string"/>
+			        <xsd:element name="matchPurpose" nillable="false" type="xsd:string"/>
+        			<xsd:element name="matchRuleSetUid" nillable="false" type="xsd:string"/>
+			        <xsd:element name="ruleNumber" nillable="false" type="xsd:integer"/>
+			        <xsd:element maxOccurs="unbounded" minOccurs="0" name="matchColumnUid" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataMatchRuleSet">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a match rule set.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+					<xsd:element default="false" name="defaultRuleSet" type="xsd:boolean"/>
+					<xsd:element default="false" name="enabled" type="xsd:boolean"/>
+			        <xsd:element name="searchLevel" nillable="false" type="xsd:string"/>
+        			<xsd:element name="parentUid" nillable="false" type="xsd:string"/>
+					<xsd:element maxOccurs="unbounded" minOccurs="0" name="metaDataMatchRule" type="MetaDataMatchRule"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataMatchColumn">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a match column.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+			        <xsd:element name="owningTableUid" nillable="false" type="xsd:string"/>
+        			<xsd:element name="sourceTableUid" nillable="false" type="xsd:string"/>
+			        <xsd:element name="sequence" nillable="false" type="xsd:integer"/>
+        			<xsd:element name="matchKey" nillable="false" type="xsd:boolean"/>
+        			<xsd:element name="fuzzyColumn" nillable="false" type="xsd:boolean"/>
+        			<xsd:element maxOccurs="unbounded" minOccurs="0" name="column" type="tns:SiperianObjectUid"/>
+                    <xsd:element name="metaDataMatchColumn" nillable="true" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataRelationship">
+        <xsd:annotation>
+        	<xsd:documentation>This is meta-data about a relationship.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>
+			        <xsd:element name="parentTableUid" nillable="false" type="xsd:string"/>
+        			<xsd:element name="childTableUid" nillable="false" type="xsd:string"/>
+			        <xsd:element name="parentColumnUid" type="xsd:string"/>
+			        <xsd:element name="childColumnUid" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataBatchGroup">
+    	<xsd:annotation>
+    		<xsd:documentation>This is meta-data about a Batch Group</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:complexContent>
+    		<xsd:extension base="MetaDataBase">
+    			<xsd:sequence>
+    				<xsd:element maxOccurs="unbounded" minOccurs="0" name="batchItem" type="xsd:string"/>
+    			</xsd:sequence>
+    		</xsd:extension>
+    	</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataHmProfile">
+    	<xsd:annotation>
+    		<xsd:documentation>This is meta-data about HM Profile</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:complexContent>
+    		<xsd:extension base="MetaDataBase">
+    			<xsd:sequence>
+			        <xsd:element maxOccurs="unbounded" minOccurs="0" name="roleUid" type="tns:SiperianObjectUid"/>
+			        <xsd:element maxOccurs="unbounded" minOccurs="1" name="hmSandboxUid" type="tns:SiperianObjectUid"/>
+    			</xsd:sequence>
+    		</xsd:extension>
+    	</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:simpleType name="MetaDataHmSandboxStatus">
+    	<xsd:annotation>
+    		<xsd:documentation>The possible values for HM Sandbox status</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="Incomplete"/>
+    		<xsd:enumeration value="Active"/>
+    		<xsd:enumeration value="Error"/>
+    	</xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="MetaDataHmSandbox">
+    	<xsd:annotation>
+    		<xsd:documentation>This is meta-data about HM Sandbox</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:complexContent>
+    		<xsd:extension base="MetaDataBase">
+    			<xsd:sequence>
+    				<xsd:element name="status" type="MetaDataHmSandboxStatus"/>
+    				<xsd:element name="parentSandboxUid" nillable="true" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="promotable" type="xsd:boolean"/>
+			        <xsd:element maxOccurs="unbounded" minOccurs="1" name="hmProfileUid" type="tns:SiperianObjectUid"/>
+    			</xsd:sequence>
+    		</xsd:extension>
+    	</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataHmTypeBase">
+    	<xsd:annotation>
+    		<xsd:documentation>This is meta-data about HM Entity Type (also known as BO Class)</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:complexContent>
+    		<xsd:extension base="MetaDataBase">
+    			<xsd:sequence>
+    				<xsd:element name="tooltipPattern" type="xsd:string"/>
+    				<xsd:element name="color" type="xsd:string"/>
+    				<xsd:element name="displayPackageUid" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="displayParentUid" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="putPackageUid" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="putParentUid" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="updateAllowed" type="xsd:boolean"/>
+    				<xsd:element name="addAllowed" type="xsd:boolean"/>
+    			</xsd:sequence>
+    		</xsd:extension>
+    	</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataHmEntityType">
+    	<xsd:annotation>
+    		<xsd:documentation>This is meta-data about HM Entity Type (also known as BO Class)</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:complexContent>
+    		<xsd:extension base="MetaDataHmTypeBase">
+    			<xsd:sequence>
+    				<xsd:element name="rowidBoClass" type="xsd:string"/>
+    				<xsd:element name="labelPattern" type="xsd:string"/>
+    				<xsd:element name="smallIcon" type="xsd:string"/>
+    				<xsd:element name="largeIcon" type="xsd:string"/>
+    				<xsd:element name="entityTypeDisplayPackageColumnUid" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="entityTypePutPackageColumnUid" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="entityTypeRowid" type="xsd:boolean"/>
+    			</xsd:sequence>
+    		</xsd:extension>
+    	</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:simpleType name="MetaDataHmRelationshipDirection">
+    	<xsd:annotation>
+    		<xsd:documentation>The possible values for HM Relationship Direction</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="Entity 1 to Entity 2"/>
+    		<xsd:enumeration value="Entity 2 to Entity 1"/>
+    		<xsd:enumeration value="Undirected"/>
+    		<xsd:enumeration value="Bi-directional"/>
+    		<xsd:enumeration value="Unknown"/>
+    	</xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="MetaDataHmRelationshipType">
+    	<xsd:annotation>
+    		<xsd:documentation>This is meta-data about HM Relationship Type</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:complexContent>
+    		<xsd:extension base="MetaDataHmTypeBase">
+    			<xsd:sequence>
+    				<xsd:element name="rowidRelType" type="xsd:string"/>
+    				<xsd:element name="entityTypeUid1" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="entityTypeUid2" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="direction" type="MetaDataHmRelationshipDirection"/>
+    				<xsd:element name="fkRel" type="xsd:boolean"/>
+    				<xsd:element name="relStartDate" type="xsd:date"/>
+    				<xsd:element name="relEndDate" type="xsd:date"/>
+    				<xsd:element name="deleteAllowed" type="xsd:boolean"/>
+    				<xsd:element name="relTypeDisplayPackageColumnUid" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="relTypePutPackageColumnUid" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="relTypeRowid" type="xsd:boolean"/>
+    				<xsd:element name="hierarchyDisplayPackageColumnUid" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="hierarchyPutPackageColumnUid" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="hierarchyRowid" type="xsd:boolean"/>
+    				<xsd:element maxOccurs="unbounded" minOccurs="1" name="hierarchyUid" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="entityBaseObjectColumnUid1" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="entityBaseObjectColumnUid2" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="entityDisplayPackageColumnUid1" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="entityDisplayPackageColumnUid2" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="entityPutPackageColumnUid1" type="tns:SiperianObjectUid"/>
+    				<xsd:element name="entityPutPackageColumnUid2" type="tns:SiperianObjectUid"/>
+    			</xsd:sequence>
+    		</xsd:extension>
+    	</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataHmHierarchy">
+    	<xsd:annotation>
+    		<xsd:documentation>This is meta-data about HM Hierarchy</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:complexContent>
+    		<xsd:extension base="MetaDataBase">
+    			<xsd:sequence>
+    				<xsd:element name="rowidHierarchy" type="xsd:string"/>
+    				<xsd:element maxOccurs="unbounded" minOccurs="1" name="relTypeUid" type="tns:SiperianObjectUid"/>
+    			</xsd:sequence>
+    		</xsd:extension>
+    	</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:simpleType name="MetaDataHmPackageUsageType">
+    	<xsd:annotation>
+    		<xsd:documentation>The possible values for HM Package Usage type</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="Label"/>
+    		<xsd:enumeration value="Tooltip"/>
+    		<xsd:enumeration value="Search"/>
+    		<xsd:enumeration value="List"/>
+    		<xsd:enumeration value="Detail"/>
+    		<xsd:enumeration value="Put"/>
+    		<xsd:enumeration value="Common"/>
+    		<xsd:enumeration value="Add"/>
+    	</xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="MetaDataHmPackage">
+    	<xsd:annotation>
+    		<xsd:documentation>This is meta-data about HM Package</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:complexContent>
+    		<xsd:extension base="MetaDataBase">
+    			<xsd:sequence>
+    				<xsd:choice>
+	    				<xsd:element name="relTypeUid" type="tns:SiperianObjectUid"/>
+    					<xsd:element name="entityTypeUid" type="tns:SiperianObjectUid"/>
+    				</xsd:choice>
+    				<xsd:element name="usageType" type="MetaDataHmPackageUsageType"/>
+    				<xsd:element maxOccurs="unbounded" minOccurs="1" name="metaDataTableColumn" type="MetaDataTableColumn"/>
+    			</xsd:sequence>
+    		</xsd:extension>
+    	</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataHmConfiguration">
+    	<xsd:annotation>
+    		<xsd:documentation>This is meta-data about HM Configuration</xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:complexContent>
+    		<xsd:extension base="MetaDataBase">
+    			<xsd:sequence>
+    				<xsd:element name="metaDataHmProfile" type="MetaDataHmProfile"/>
+    				<xsd:element name="metaDataHmSandbox" type="MetaDataHmSandbox"/>
+    				<xsd:element maxOccurs="unbounded" minOccurs="1" name="metaDataHmEntityType" type="MetaDataHmEntityType"/>
+    				<xsd:element maxOccurs="unbounded" minOccurs="1" name="metaDataHmHierarchy" type="MetaDataHmHierarchy"/>
+    				<xsd:element maxOccurs="unbounded" minOccurs="1" name="metaDataHmRelationshipType" type="MetaDataHmRelationshipType"/>
+    				<xsd:element maxOccurs="unbounded" minOccurs="1" name="metaDataHmPackage" type="MetaDataHmPackage"/>
+    			</xsd:sequence>
+    		</xsd:extension>
+    	</xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="MetaDataOrs">
+        	<xsd:annotation>
+        		<xsd:documentation>This is about ORS</xsd:documentation>
+        	</xsd:annotation>
+	       <xsd:sequence>		 
+		 <xsd:element name="name" nillable="false" type="xsd:string"/>
+		 <xsd:element name="displayName" nillable="false" type="xsd:string"/>
+		 <xsd:element name="orsId" nillable="true" type="xsd:string"/>
+	       </xsd:sequence>
+    </xsd:complexType>    
+    <xsd:complexType name="MetaDataWorkflowEngine">
+        	<xsd:annotation>
+        		<xsd:documentation>This is meta-data about a workflow engine</xsd:documentation>
+        	</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="MetaDataBase">
+				<xsd:sequence>		 
+					<xsd:element name="type" nillable="false" type="xsd:string"/>
+					<xsd:element name="host" nillable="true" type="xsd:string"/>
+					<xsd:element name="port" nillable="true" type="xsd:string"/>
+					<xsd:element name="username" nillable="true" type="xsd:string"/>
+					<xsd:element name="password" nillable="true" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+    </xsd:complexType>    
+</xsd:schema>
