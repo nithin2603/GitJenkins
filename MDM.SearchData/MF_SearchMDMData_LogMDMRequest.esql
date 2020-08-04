@@ -10,7 +10,7 @@ CREATE COMPUTE MODULE MF_SearchMDMData_LogMDMRequest
 			SET OutputLocalEnvironment.Destination.File.Name='Request-'||COALESCE(Environment.UUID,'')||'-'||CAST(CURRENT_TIMESTAMP AS CHARACTER FORMAT 'yyyyMMddHHmmssSSSSSS')||'.xml';
 			SET OutputLocalEnvironment.Destination.File.Directory= Environment.Variables.FileData.XMLNSC.Settings.RequestLog;
 			PROPAGATE TO TERMINAL 'out';
-			-- Pripagating to differnet outputs--
+			-- Pripagating to differnet outputs from inputs--
 		END IF;
 		RETURN FALSE;
 	END;
